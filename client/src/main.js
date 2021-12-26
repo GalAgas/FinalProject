@@ -1,7 +1,44 @@
 import Vue from 'vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import {
+  FormGroupPlugin,
+  FormPlugin,
+  FormInputPlugin,
+  ButtonPlugin,
+  CardPlugin,
+  NavbarPlugin,
+  FormSelectPlugin,
+  AlertPlugin,
+  ToastPlugin,
+  LayoutPlugin,
+  InputGroupPlugin,
+  TablePlugin,
+  FormCheckboxPlugin,
+  IconsPlugin,
+  FormFilePlugin,
+}
+from 'bootstrap-vue';
 import App from './App.vue';
 import router from './router';
-import 'bootstrap/dist/css/bootstrap.css';
+
+[
+  FormGroupPlugin,
+  FormPlugin,
+  FormInputPlugin,
+  ButtonPlugin,
+  CardPlugin,
+  NavbarPlugin,
+  FormSelectPlugin,
+  AlertPlugin,
+  ToastPlugin,
+  LayoutPlugin,
+  InputGroupPlugin,
+  TablePlugin,
+  FormCheckboxPlugin,
+  IconsPlugin,
+  FormFilePlugin,
+].forEach((x) => Vue.use(x));
 
 Vue.config.productionTip = false;
 
