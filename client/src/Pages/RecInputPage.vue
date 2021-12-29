@@ -33,22 +33,23 @@ export default {
     return {
       file1: null,
       PatientID: '',
-      msg:'',
+      msg: '',
     };
   },
   methods: {
     handleClick() {
-      var bodyFormData = new FormData();
-      bodyFormData.append('id',this.PatientID);
-      bodyFormData.append('ngs_file',this.file1);
+      const bodyFormData = new FormData();
+      bodyFormData.append('id', this.PatientID);
+      bodyFormData.append('ngs_file', this.file1);
       const config = {
-        headers: { 'content-type': 'multipart/form-data' }
-    }
-      console.log('in handle click');
-      const path = 'http://localhost:5000/check';
-      axios.post(path,bodyFormData,config)
+        headers: { 'content-type': 'multipart/form-data' },
+      };
+      // console.log('in handle click');
+      const path = 'http://localhost:5000/generate';
+      axios.post(path, bodyFormData, config)
         .then((res) => {
           this.msg = res.data;
+          console.log(res.data.type);
         })
         .catch((error) => {
           // eslint-disable-next-line
