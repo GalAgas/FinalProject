@@ -30,6 +30,7 @@ class EndpointAction(object):
     Endpoint class - contains the backend.
     when it called performers the action
     """
+
     def __init__(self, action):
         self.action = action
         # self.backend = MyBack()
@@ -43,6 +44,7 @@ class WebService(object):
     Wrapper class for app
     creates and runs the app
     """
+
     def __init__(self, name):
         self.app = Flask(name)
         self.app.config.from_object(__name__)
@@ -66,17 +68,35 @@ class WebService(object):
         :param handler: callable function, called on request
         :return: void, adds the endpoint to the app
         """
-        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(handler), methods=['GET'])
+        self.app.add_url_rule(endpoint, endpoint_name, EndpointAction(
+            handler), methods=['GET', 'POST'])
+
+    # def validate_details(self):
+    #     details = request.get_json()
+    #     print(details)
+    #     patient_id = details['id']
+    #     file_path = details['ngs_file']
+    #     if not self.check_valid_id(patient_id):
+    #         return self.response("Invalid id", 400)
+    #     if not self.check_valid_file(file_path):
+    #         return self.response("Invalid file", 400)
+
+    #     return self.response("All good", 200)
 
     def validate_details(self):
-        details = request.get_json()
-        patient_id = details['id']
-        file_path = details['ngs_file']
-        if not self.check_valid_id(patient_id):
-            return self.response("Invalid id", 400)
-        if not self.check_valid_file(file_path):
+        # ngs_file = request.form['ngs_file']
+        ngs_file = request.files['ngs_file']
+        patient_id = request.form['id']
+        print(patient_id)
+        print(ngs_file)
+
+        # if not self.check_valid_id(patient_id):
+        #     return self.response("Invalid id", 400)
+        if not self.check_valid_file(ngs_file):
             return self.response("Invalid file", 400)
 
+        print(self.file.columns)
+        print(self.file)
         return self.response("All good", 200)
 
     def response(self, message, status):
@@ -86,7 +106,6 @@ class WebService(object):
             mimetype='application/json'
         )
         return response
-
 
     def generate_recommendation(self):
         try:
@@ -100,27 +119,24 @@ class WebService(object):
             print(e)
             return self.response("Something went worng!", 400)
 
-
     def check_valid_id(self, patient_id):
         # check vs file of id's that the id exists in.
         self.patient_id = patient_id
         return True
 
-
-    def check_valid_file(self, file_path):
-        self.file_path = file_path
+    def check_valid_file(self, ngs_file):
+        self.file_path = ngs_file
         self.file = self.read_file()
         return True
 
-
     def read_file(self):
-        # return pd.read_csv(self.file_path)
-        return "I'm a file"
+        return pd.read_csv(self.file_path)
+        # return "I'm a file"
 
 
 web_service_app = WebService('webservice')
-web_service_app.add_endpoint(endpoint='/check', endpoint_name='validate details', handler=web_service_app.validate_details)
-web_service_app.add_endpoint(endpoint='/generate', endpoint_name='generate recommendation', handler=web_service_app.generate_recommendation)
+web_service_app.add_endpoint(
+    endpoint='/check', endpoint_name='validate details', handler=web_service_app.validate_details)
+web_service_app.add_endpoint(endpoint='/generate', endpoint_name='generate recommendation',
+                             handler=web_service_app.generate_recommendation)
 web_service_app.run()
-
-
