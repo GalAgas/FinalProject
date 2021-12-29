@@ -1,7 +1,7 @@
 
 class MICPredictor:
-    def __init__(self, file):
+    def __init__(self):
         pass
 
-    def predict(self):
+    def predict(self, file):
         pass
