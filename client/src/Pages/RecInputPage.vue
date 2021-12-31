@@ -19,7 +19,7 @@
     size="lg"
     pill variant="info"
     v-on:click="handleClick">
-    Large Button
+    Submit
     </b-button>
   </div>
 </template>
@@ -50,6 +50,7 @@ export default {
         .then((res) => {
           this.msg = res.data;
           console.log(res.data.type);
+          this.$router.push({ name: 'ResultPage', params: { res: res.data } });
         })
         .catch((error) => {
           // eslint-disable-next-line
