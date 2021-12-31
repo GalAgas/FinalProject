@@ -49,7 +49,6 @@ export default {
       axios.post(path, bodyFormData, config)
         .then((res) => {
           this.msg = res.data;
-          console.log(res.data.type);
           this.$router.push({ name: 'ResultPage', params: { res: res.data } });
         })
         .catch((error) => {

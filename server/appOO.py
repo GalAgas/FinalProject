@@ -88,9 +88,7 @@ class WebService(object):
             mic = self.mic_predictor.predict(file)
             initial_ranking = self.treatment_ranking.rank(mic)
             final_ranking = self.context_aware.rank(initial_ranking)
-            result = final_ranking.to_json(orient='index')
-            parsed = json.loads(result)
-            return json.dumps(parsed, indent=4)
+            return jsonify(final_ranking)
         except Exception as e:
             print(e)
             return self.response("Something went worng!", 400)
