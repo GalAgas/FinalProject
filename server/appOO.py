@@ -81,7 +81,7 @@ class WebService(object):
         patient_id = request.form['id']
         try:
             if not self.check_valid_id(patient_id):
-                return self.response("Invalid Id", 400)
+                return self.response("Invalid Id", 409)
             if not self.check_valid_file(ngs_file):
                 return self.response("Invalid NGS File", 400)
             file = self.read_file(ngs_file)
@@ -100,6 +100,7 @@ class WebService(object):
         return True
 
     def check_valid_file(self, ngs_file):
+        # check if the file is csv/xslx
         return True
 
     def read_file(self, path):

@@ -6,6 +6,6 @@ class contextAware:
         pass
 
     def rank(self, initial_ranking):
-        # initial_ranking.sort_values(by='Drug Name', inplace=True)
+        ranked_treatments = initial_ranking.to_dict(orient='records')
 
-        return initial_ranking
+        return ranked_treatments
