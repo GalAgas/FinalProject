@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <h1>  in RecInputPage </h1>
+    <h1> Recommendation Inputs Page </h1>
+    <h1> Please enter patient ID & NGS csv file </h1>
     <b-form-input
     id="input-small"
     size="lg"
@@ -40,7 +41,7 @@ export default {
     handleClick() {
       const bodyFormData = new FormData();
       bodyFormData.append('id', this.PatientID);
-      bodyFormData.append('ngs_file', this.file1);
+      bodyFormData.append('gene_correlation_file', this.file1);
       const config = {
         headers: { 'content-type': 'multipart/form-data' },
       };
