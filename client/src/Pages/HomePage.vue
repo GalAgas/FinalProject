@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <h1> tomer and guy </h1>
-    <h1> front tomer</h1>
-    <b-button variant="primary" :to="{ name: 'RecInputPage'}">go to RecInput</b-button>
+    <h1> GPS </h1>
+    <h1> Antibiotic Treatment Recommendation System </h1>
+    <b-button variant="primary" :to="{ name: 'RecInputPage'}">
+    Start Recommendation Process</b-button>
   </div>
 </template>
 

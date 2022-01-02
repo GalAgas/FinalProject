@@ -1,8 +1,12 @@
 <template>
   <div class="container">
-    <h1> in Result Page </h1>
+    <h1> Result Page </h1>
     <div class="table_div">
-        <b-table striped hover :items="res" :fields="fields"></b-table>
+        <b-table striped hover :items="res" :fields="fields">
+          <template #cell(index)="data">
+            {{ data.index + 1 }}
+          </template>
+        </b-table>
     </div>
   </div>
 </template>
@@ -14,7 +18,7 @@ export default {
   data() {
     return {
       res: null,
-      fields: [{ key: 'Drug Name' }, { key: 'MIC' }, { key: 'Rank' }, { key: 'Comments' }],
+      fields: ['index', { key: 'Drug Name' }, { key: 'MIC' }, { key: 'Rank' }, { key: 'Comments' }],
     };
   },
   created() {
