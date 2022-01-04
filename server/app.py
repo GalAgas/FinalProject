@@ -87,7 +87,14 @@ class WebService(object):
         return True
 
     def check_valid_txt(self, gene_correlation_txt):
-        #  TODO: check who to run on file and read each line
+        for i, row in enumerate(gene_correlation_txt):
+            row_tokens = row.split(" ")
+            if not row_tokens[0].startswith(">contig"):
+                return self.response(f'line {i} , column 1 starts with invalid value', 400)
+            if not row_tokens[1].startswith("len=") or not isinstance(row_tokens[1][4:],int):
+                return self.response(f'line {i}, column 2 has invalid value', 400)
+            if not row_tokens[2].startswith("cov=") or not isinstance(row_tokens[2][4:],float):
+                return self.response(f'line {i}, column 3 has invalid value', 400)
 
     ## NEED TO CHECK ALL CASES ##
     def check_valid_csv(self, gene_correlation_csv):
@@ -128,7 +135,7 @@ class WebService(object):
 
     def read_txt_file(self, path):
         file = open(path,"r")
-        return file.read()
+        return file.readlines()
 
     def read_csv_file(self, path):
         return pd.read_csv(path)
