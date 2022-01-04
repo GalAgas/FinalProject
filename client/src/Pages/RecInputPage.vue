@@ -83,9 +83,9 @@ export default {
       //   // return Number.isNaN(this.PatientID);
       //   return intRegex.test(this.PatientID);
       // }
-      console.log(this.PatientID);
+      // console.log(this.PatientID);
       const intRegex = /^\d+$/;
-      console.log(this.PatientID && intRegex.test(this.PatientID));
+      // console.log(this.PatientID && intRegex.test(this.PatientID));
       if (this.PatientID && intRegex.test(this.PatientID)) {
         return true;
       }
@@ -125,7 +125,7 @@ export default {
         })
         .catch((error) => {
           // eslint-disable-next-line
-          console.error(error);
+          console.log(error.response.data);
         });
     },
   },
