@@ -1,4 +1,4 @@
-#FinalProject - G2P2S
+# FinalProject - G2P2S
 
 ## Instructors
 Mr. Amit Weiss - instructor<br />
