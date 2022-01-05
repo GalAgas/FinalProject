@@ -1,5 +1,7 @@
 # FinalProject
 
+## Recommendation System for Antibiotic Treatment - Initial Version
+
 ## Instructors
 Mr. Amit Weiss - instructor<br />
 Prof. Jacob Moran-Gilad - instructor & client
@@ -8,9 +10,7 @@ Prof. Jacob Moran-Gilad - instructor & client
 Guy Zaidman, Gal Agasi, Tomer Kelner & Tomer Varon
 
 
-## Info
-Recommendation System for Antibiotic Treatment - Initial Version
-
+## General Info
 :ok_hand: Web based application with client-server architecture<br />
 :ok_hand: REST API - using Swagger, Server Side – Flask framework, Client Side – Vue.js<br />
 :ok_hand: End to end automated DEMO pipeline development (algorithmoc modules still in research)<br />
