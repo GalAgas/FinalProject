@@ -19,6 +19,7 @@ import {
   FormFilePlugin,
 }
 from 'bootstrap-vue';
+import Vuelidate from 'vuelidate';
 import App from './App.vue';
 import router from './router';
 
@@ -39,6 +40,7 @@ import router from './router';
   IconsPlugin,
   FormFilePlugin,
 ].forEach((x) => Vue.use(x));
+Vue.use(Vuelidate);
 
 Vue.config.productionTip = false;
 
