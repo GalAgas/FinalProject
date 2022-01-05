@@ -1,4 +1,4 @@
-# FinalProject - G2P2S
+# FinalProject
 
 ## Instructors
 Mr. Amit Weiss - instructor<br />
@@ -30,4 +30,4 @@ Enjoy :heart:
 :ok_hand: About Page??.<br />
 
           
-[Go To Top](#FinalProject - G2P2S)
+[Go To Top](#FinalProject)
