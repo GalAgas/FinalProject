@@ -8,6 +8,12 @@ class treatmentRanking:
         pass
 
     def rank(self, mic):
+        """
+        create initial rank to treatments based on MIC values
+        future implement - will consider drugs traits and chemoinformatics.
+        :param mic: all MIC values based on system inputs, dataframe
+        :return dataframe of possible treatments
+        """
         # false return
         dict_initial_ranking = {
             'AB1': ['AB1', '10mg', "I'm a comment", 0.8],
