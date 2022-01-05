@@ -1,11 +1,11 @@
-# FinalProject - G2P2S
+#FinalProject - G2P2S
 
 ## Instructors
 Mr. Amit Weiss - instructor<br />
 Prof. Jacob Moran-Gilad - instructor & client
 
 ## Project Members
-GuyZaidman, Gal Agasi, Tomer Kelner & Tomer Varon
+Guy Zaidman, Gal Agasi, Tomer Kelner & Tomer Varon
 
 
 ## Info
