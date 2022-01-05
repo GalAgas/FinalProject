@@ -17,7 +17,7 @@ Guy Zaidman, Gal Agasi, Tomer Kelner & Tomer Varon
 :ok_hand: Single Page App with easy to use GUI<br />
 
 ## Link to API
-You can click [here](https://app.swaggerhub.com/apis-docs/tomerkel/HW3.1/1.0.0/) to view our API!
+You can click [here](https://app.swaggerhub.com/apis-docs/tomerkel/ProjectAPI/1.0.0) to view our API!
 Enjoy :heart:
 
 ## Functionality
