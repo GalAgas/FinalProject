@@ -1,7 +1,7 @@
 # FinalProject - G2P2S
 
 ## Instructors
-Mr. Amit Weiss - instructor
+Mr. Amit Weiss - instructor<br />
 Prof. Jacob Moran-Gilad - instructor & client
 
 ## Project Members
