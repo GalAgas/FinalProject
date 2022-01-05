@@ -26,7 +26,7 @@ Enjoy :heart:
 :ok_hand: Validation checks for inputs.<br />
 :ok_hand: Results Page - displays sorted optional treatments, best option at the top.<br />
 :ok_hand: Filter results according to user choise of confidence level.<br />
-:ok_hand: QA - Backend autameted checks using Pytest.<br />
+:ok_hand: QA - Backend autameted unit testing using Pytest.<br />
 :ok_hand: About Page.<br />
 
           
