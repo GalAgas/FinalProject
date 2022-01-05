@@ -17,6 +17,7 @@ import {
   FormCheckboxPlugin,
   IconsPlugin,
   FormFilePlugin,
+  ModalPlugin,
 }
 from 'bootstrap-vue';
 import App from './App.vue';
@@ -38,6 +39,7 @@ import router from './router';
   FormCheckboxPlugin,
   IconsPlugin,
   FormFilePlugin,
+  ModalPlugin,
 ].forEach((x) => Vue.use(x));
 
 Vue.config.productionTip = false;
