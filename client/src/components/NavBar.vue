@@ -7,7 +7,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item :to="{ name: 'AboutUsPage'}">About Us</b-nav-item>
+        <b-nav-item :to="{ name: 'AboutUsPage'}">About</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
