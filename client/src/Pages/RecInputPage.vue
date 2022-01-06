@@ -71,6 +71,7 @@ export default {
       txtFile: null,
       PatientID: null,
       msg: '',
+      popUp: '',
     };
   },
   computed: {
@@ -126,6 +127,25 @@ export default {
         .catch((error) => {
           // eslint-disable-next-line
           console.log(error.response.data);
+          this.showPopUp(error.response.data);
+        });
+    },
+    showPopUp(data) {
+      this.popUp = '';
+      this.$bvModal.msgBoxOk(data, {
+        title: 'Error',
+        size: 'xl',
+        buttonSize: 'sm',
+        okVariant: 'sucsses',
+        headerClass: 'p-2 border-bottom-0',
+        footerClass: 'p-2 border-top-0',
+        centered: true,
+      })
+        .then((value) => {
+          this.popUp = value;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
