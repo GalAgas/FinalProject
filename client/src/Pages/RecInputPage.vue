@@ -1,116 +1,58 @@
 <template>
   <div>
     <h1> Recommendation Inputs Page </h1>
-    <h1> Please enter patient ID & NGS csv file </h1>
-    <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
-      <b-form-group>
-        <b-form-input
-          id="input-small1"
-          size="lg"
-          v-model="$v.form.PatientID.$model"
-          :state="validateState('PatientID')"
-          placeholder="Enter Patient ID">
-        </b-form-input>
-        <b-form-invalid-feedback v-if="!$v.form.PatientID.required">
-          Patient ID is required.
-        </b-form-invalid-feedback>
-        <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
-          Patient ID must contain only digits
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group>
-        <b-form-file
-        accept=".csv"
-        v-model="csvFile"
-        required
-        :state="validateCSV"
-        placeholder="Choose the require Gene Correlation file or drop it here..."
-        drop-placeholder="Drop file here..."
-        ></b-form-file>
-        <b-form-invalid-feedback :state="validateCSV">
-        Gene Correlation input must be a .csv file.
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group>
-        <b-form-file
-        accept=".txt"
-        v-model="txtFile"
-        required
-        :state="validateTXT"
-        placeholder="Choose the require txt file or drop it here..."
-        drop-placeholder="Drop file here..."
-        ></b-form-file>
-        <b-form-invalid-feedback :state="validateTXT">
-        Contigs input must be a .txt file.
-        </b-form-invalid-feedback>
-      </b-form-group>
-        <b-button
-          size="lg"
-          pill variant="info"
-          v-on:click="handleClick">
-          Submit
-        </b-button>
-    </b-form>
+    <div class="formDiv">
+    <h2> Please enter patient ID & NGS csv file : </h2>
+      <b-form>
+        <b-form-group>
+          <b-form-input
+            id="input-small"
+            size="lg"
+            v-model="$v.form.PatientID.$model"
+            :state="validateState('PatientID')"
+            placeholder="Enter Patient ID">
+          </b-form-input>
+          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.required">
+            Patient ID is required.
+          </b-form-invalid-feedback-->
+          <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
+            Patient ID must contain only digits
+          </b-form-invalid-feedback>
+        </b-form-group>
+        <b-form-group>
+          <b-form-file
+          accept=".csv"
+          v-model="csvFile"
+          :state="validateCSV"
+          placeholder="Choose the require Gene Correlation file or drop it here..."
+          drop-placeholder="Drop file here..."
+          ></b-form-file>
+          <b-form-invalid-feedback :state="validateCSV">
+          Gene Correlation input must be a .csv file.
+          </b-form-invalid-feedback>
+        </b-form-group>
+        <b-form-group>
+          <b-form-file
+          accept=".txt"
+          v-model="txtFile"
+          :state="validateTXT"
+          placeholder="Choose the require txt file or drop it here..."
+          drop-placeholder="Drop file here..."
+          ></b-form-file>
+          <b-form-invalid-feedback :state="validateTXT">
+          Contigs input must be a .txt file.
+          </b-form-invalid-feedback>
+        </b-form-group>
+          <b-button
+            size="lg"
+            pill variant="info"
+            :disabled="buttonDisabled"
+            v-on:click="handleClick">
+            Submit
+          </b-button>
+      </b-form>
+    </div>
   </div>
-  <!--div class="container">
-    <h1> Recommendation Inputs Page </h1>
-    <h1> Please enter patient ID & NGS csv file </h1>
-
-    <b-form-input
-      id="input-small"
-      size="lg"
-      v-model="PatientID"
-      :state="validateID"
-      placeholder="Enter Patient ID">
-    </b-form-input>
-    <br/>
-
-    <b-form-invalid-feedback :state="validateID">
-      Patient ID must be a number.
-    </b-form-invalid-feedback>
-
-    <br/>
-    <br/>
-
-    <b-form-file
-      accept=".csv"
-      v-model="csvFile"
-      required
-      :state="validateCSV"
-      placeholder="Choose the require Gene Correlation file or drop it here..."
-      drop-placeholder="Drop file here..."
-    ></b-form-file>
-
-    <br/>
-
-    <b-form-invalid-feedback :state="validateCSV">
-      Gene Correlation input must be a .csv file.
-    </b-form-invalid-feedback>
-
-    <br/>
-    <b-form-file
-      accept=".txt"
-      v-model="txtFile"
-      :state="validateTXT"
-      placeholder="Choose the require txt file or drop it here..."
-      drop-placeholder="Drop file here..."
-    ></b-form-file>
-    <br/>
-
-    <b-form-invalid-feedback :state="validateTXT">
-      Contigs input must be a .txt file.
-    </b-form-invalid-feedback>
-
-    <br/>
-
-    <b-button
-      size="lg"
-      pill variant="info"
-      v-on:click="handleClick">
-      Submit
-    </b-button>
-
-  </div-->
 </template>
 
 <script>
@@ -132,13 +74,6 @@ export default {
       msg: '',
       popUp: '',
     };
-    // return {
-    //   csvFile: null,
-    //   txtFile: null,
-    //   PatientID: null,
-    //   msg: '',
-    //   popUp: '',
-    // };
   },
   validations: {
     form: {
@@ -149,38 +84,17 @@ export default {
     },
   },
   computed: {
-  //   validateID() {
-  //     // if (this.PatientID) {
-  //     //   // console.log(this.PatientID);
-  //     //   const intRegex = /^\d+$/;
-  //     //   console.log(intRegex.test(this.PatientID));
-  //     //   // return Number(this.PatientID);
-  //     //   // return Number.isNaN(this.PatientID);
-  //     //   return intRegex.test(this.PatientID);
-  //     // }
-  //     // console.log(this.PatientID);
-  //     const intRegex = /^\d+$/;
-  //     // console.log(this.PatientID && intRegex.test(this.PatientID));
-  //     // if (this.PatientID && intRegex.test(this.PatientID)) {
-  //     if (this.PatientID == null || intRegex.test(this.PatientID)) {
-  //       return true;
-  //     }
-  //     return false;
-  //     // return this.PatientID && intRegex.test(this.PatientID);
-  //   },
     validateCSV() {
-      // if (this.csvFile) {
-      //   console.log(this.csvFile.type);
-      //   console.log(this.csvFile.name);
-      // }
       return this.csvFile && this.csvFile.type.endsWith('.ms-excel');
     },
     validateTXT() {
-      // if (this.txtFile) {
-      //   console.log(this.txtFile.type);
-      //   console.log(this.txtFile.name);
-      // }
       return this.txtFile && this.txtFile.type.startsWith('text/');
+    },
+    buttonDisabled() {
+      if (this.form.PatientID == null || this.csvFile == null || this.txtFile == null) {
+        return true;
+      }
+      return false;
     },
   },
   methods: {
@@ -230,3 +144,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.formDiv{
+  width: 75%;
+  padding-top: 5%;
+  padding-left: 25%;
+}
+
+</style>
