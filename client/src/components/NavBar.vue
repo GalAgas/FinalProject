@@ -1,13 +1,15 @@
 <template>
 <div>
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand :to="{ name: 'HomePage'}">G2P2S</b-navbar-brand>
+    <b-navbar-brand :to="{ name: 'HomePage'}">G2P2S <b-icon icon="compass-fill"></b-icon>
+    </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item :to="{ name: 'AboutUsPage'}">About</b-nav-item>
+        <b-nav-item :to="{ name: 'AboutUsPage'}">About <b-icon icon="suit-heart"></b-icon>
+        </b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -33,3 +35,15 @@ export default {
 };
 
 </script>
+<style>
+ .navbar.navbar-dark{
+  background-color: #454545!important;
+}
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>

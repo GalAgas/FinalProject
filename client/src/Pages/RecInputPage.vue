@@ -47,6 +47,7 @@
             size="lg"
             pill variant="info"
             :disabled="buttonDisabled"
+            class="ml-5w-75"
             v-on:click="handleClick">
             Submit
           </b-button>
@@ -152,4 +153,10 @@ export default {
   padding-left: 25%;
 }
 
+.ml-5w-75 {
+  margin-top: 3%;
+  width: 20%;
+  background-color: #454545!important;
+  border-color: #000000!important;
+}
 </style>

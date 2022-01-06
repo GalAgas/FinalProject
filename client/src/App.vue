@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Abril Fatface|Exo"/>
     <NavBar/>
     <div id="innerDiv">
       <router-view/>
@@ -25,6 +28,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  font-family: "Exo";
+  font-weight: bold;
 }
 
 #app:before {

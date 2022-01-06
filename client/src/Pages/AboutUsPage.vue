@@ -11,7 +11,10 @@
     <br>
     <div class="aboutPage">
     <div>
+
       <b-card
+        bg-variant="dark"
+        text-variant="white"
         title="Gal Agasi"
         img-src="https://picsum.photos/600/300/?image=25"
         img-alt="Image"
@@ -21,12 +24,15 @@
       >
         <b-card-text>
           Project Manager
+          <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="#" variant="primary">Go To My Linkedin</b-button>
       </b-card>
     </div>
     <div>
       <b-card
+        bg-variant="dark"
+        text-variant="white"
         title="Guy Zaidman"
         img-src="https://picsum.photos/600/300/?image=25"
         img-alt="Image"
@@ -36,10 +42,13 @@
       >
         <b-card-text>
           The Future Husband of the Project Manager
+          <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="#" variant="primary">Go To My Linkedin</b-button>
       </b-card>
-            <b-card
+        <b-card
+        bg-variant="dark"
+        text-variant="white"
         title="Tomer Kelner"
         img-src="https://picsum.photos/600/300/?image=25"
         img-alt="Image"
@@ -49,10 +58,13 @@
       >
         <b-card-text>
           Backend Developer
+          <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="https://www.linkedin.com/in/tomer-kelner-819938210/" variant="primary">Go To My Linkedin</b-button>
       </b-card>
-            <b-card
+      <b-card
+        bg-variant="dark"
+        text-variant="white"
         title="Tomer Varon"
         img-src="https://picsum.photos/600/300/?image=25"
         img-alt="Image"
@@ -62,6 +74,7 @@
       >
         <b-card-text>
           Frontend Developer and excellent in Vue
+          <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="https://www.linkedin.com/in/tomer-varon-a9b79722a/" variant="primary">Go To My Linkedin</b-button>
       </b-card>
