@@ -40,7 +40,7 @@ export default {
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url('./assets/2.jpg');
+  background-image: url('./assets/background.jpg');
   opacity: 0.4;
   z-index: -1;
 }
