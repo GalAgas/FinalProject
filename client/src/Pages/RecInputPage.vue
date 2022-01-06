@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1> Recommendation Inputs Page </h1>
+    <h1> <B>Recommendation Inputs Page</B> </h1>
     <div class="formDiv">
-    <h2> Please enter patient ID & NGS csv file : </h2>
+    <h2> <B>Please enter patient ID & NGS csv file :</B> </h2>
       <b-form>
         <b-form-group>
           <b-form-input
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       form: {
-        PatientID: null,
+        PatientID: '',
       },
       csvFile: null,
       txtFile: null,
@@ -91,7 +91,7 @@ export default {
       return this.txtFile && this.txtFile.type.startsWith('text/');
     },
     buttonDisabled() {
-      if (this.form.PatientID == null || this.csvFile == null || this.txtFile == null) {
+      if (this.form.PatientID === '' || this.csvFile == null || this.txtFile == null || !this.validateTXT || !this.validateCSV || !this.validateState('PatientID')) {
         return true;
       }
       return false;
