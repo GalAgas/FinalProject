@@ -1,5 +1,58 @@
 <template>
-  <div class="container">
+  <div>
+    <h1> Recommendation Inputs Page </h1>
+    <h1> Please enter patient ID & NGS csv file </h1>
+    <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
+      <b-form-group>
+        <b-form-input
+          id="input-small1"
+          size="lg"
+          v-model="$v.form.PatientID.$model"
+          :state="validateState('PatientID')"
+          placeholder="Enter Patient ID">
+        </b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.PatientID.required">
+          Patient ID is required.
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
+          Patient ID must contain only digits
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group>
+        <b-form-file
+        accept=".csv"
+        v-model="csvFile"
+        required
+        :state="validateCSV"
+        placeholder="Choose the require Gene Correlation file or drop it here..."
+        drop-placeholder="Drop file here..."
+        ></b-form-file>
+        <b-form-invalid-feedback :state="validateCSV">
+        Gene Correlation input must be a .csv file.
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group>
+        <b-form-file
+        accept=".txt"
+        v-model="txtFile"
+        required
+        :state="validateTXT"
+        placeholder="Choose the require txt file or drop it here..."
+        drop-placeholder="Drop file here..."
+        ></b-form-file>
+        <b-form-invalid-feedback :state="validateTXT">
+        Contigs input must be a .txt file.
+        </b-form-invalid-feedback>
+      </b-form-group>
+        <b-button
+          size="lg"
+          pill variant="info"
+          v-on:click="handleClick">
+          Submit
+        </b-button>
+    </b-form>
+  </div>
+  <!--div class="container">
     <h1> Recommendation Inputs Page </h1>
     <h1> Please enter patient ID & NGS csv file </h1>
 
@@ -57,42 +110,64 @@
       Submit
     </b-button>
 
-  </div>
+  </div-->
 </template>
 
 <script>
 import axios from 'axios';
+import {
+  required,
+  integer,
+} from 'vuelidate/lib/validators';
 
 export default {
   name: 'RecInputPage',
   data() {
     return {
+      form: {
+        PatientID: null,
+      },
       csvFile: null,
       txtFile: null,
-      PatientID: null,
       msg: '',
       popUp: '',
     };
+    // return {
+    //   csvFile: null,
+    //   txtFile: null,
+    //   PatientID: null,
+    //   msg: '',
+    //   popUp: '',
+    // };
+  },
+  validations: {
+    form: {
+      PatientID: {
+        required,
+        integer,
+      },
+    },
   },
   computed: {
-    validateID() {
-      // if (this.PatientID) {
-      //   // console.log(this.PatientID);
-      //   const intRegex = /^\d+$/;
-      //   console.log(intRegex.test(this.PatientID));
-      //   // return Number(this.PatientID);
-      //   // return Number.isNaN(this.PatientID);
-      //   return intRegex.test(this.PatientID);
-      // }
-      // console.log(this.PatientID);
-      const intRegex = /^\d+$/;
-      // console.log(this.PatientID && intRegex.test(this.PatientID));
-      if (this.PatientID && intRegex.test(this.PatientID)) {
-        return true;
-      }
-      return false;
-      // return this.PatientID && intRegex.test(this.PatientID);
-    },
+  //   validateID() {
+  //     // if (this.PatientID) {
+  //     //   // console.log(this.PatientID);
+  //     //   const intRegex = /^\d+$/;
+  //     //   console.log(intRegex.test(this.PatientID));
+  //     //   // return Number(this.PatientID);
+  //     //   // return Number.isNaN(this.PatientID);
+  //     //   return intRegex.test(this.PatientID);
+  //     // }
+  //     // console.log(this.PatientID);
+  //     const intRegex = /^\d+$/;
+  //     // console.log(this.PatientID && intRegex.test(this.PatientID));
+  //     // if (this.PatientID && intRegex.test(this.PatientID)) {
+  //     if (this.PatientID == null || intRegex.test(this.PatientID)) {
+  //       return true;
+  //     }
+  //     return false;
+  //     // return this.PatientID && intRegex.test(this.PatientID);
+  //   },
     validateCSV() {
       // if (this.csvFile) {
       //   console.log(this.csvFile.type);
@@ -109,6 +184,10 @@ export default {
     },
   },
   methods: {
+    validateState(param) {
+      const { $dirty, $error } = this.$v.form[param];
+      return $dirty ? !$error : null;
+    },
     handleClick() {
       const bodyFormData = new FormData();
       bodyFormData.append('id', this.PatientID);
