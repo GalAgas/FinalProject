@@ -16,8 +16,7 @@
         bg-variant="dark"
         text-variant="white"
         title="Gal Agasi"
-        img-src="https://picsum.photos/600/300/?image=25"
-        img-alt="Image"
+        src="./GalImage.jpg"
         img-top
         tag="article"
         class="mb-2"
@@ -26,7 +25,7 @@
           Project Manager
           <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
-        <b-button href="#" variant="primary">Go To My Linkedin</b-button>
+        <b-button href="https://www.linkedin.com/in/gal-agasi-188284207/" variant="primary">Go To My Linkedin</b-button>
       </b-card>
     </div>
     <div>
@@ -44,13 +43,13 @@
           The Future Husband of the Project Manager
           <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
-        <b-button href="#" variant="primary">Go To My Linkedin</b-button>
+        <b-button href="https://www.linkedin.com/in/guy-zaidman-51bb43154/" variant="primary">Go To My Linkedin</b-button>
       </b-card>
         <b-card
         bg-variant="dark"
         text-variant="white"
         title="Tomer Kelner"
-        img-src="https://picsum.photos/600/300/?image=25"
+        img-src='/KelnerImage.jpeg'
         img-alt="Image"
         img-top
         tag="article"
@@ -66,7 +65,7 @@
         bg-variant="dark"
         text-variant="white"
         title="Tomer Varon"
-        img-src="https://picsum.photos/600/300/?image=25"
+        img-src="https://ibb.co/7y8vCj3"
         img-alt="Image"
         img-top
         tag="article"

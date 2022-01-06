@@ -128,7 +128,7 @@ export default {
       this.popUp = '';
       this.$bvModal.msgBoxOk(data, {
         title: 'Error',
-        size: 'xl',
+        size: 'md',
         buttonSize: 'sm',
         okVariant: 'sucsses',
         headerClass: 'p-2 border-bottom-0',
