@@ -1,9 +1,12 @@
 <template>
   <div class="container">
-    <h1> Result Page </h1>
+    <h1> Results Page <b-icon icon="list-stars"></b-icon>
+    </h1>
+    <br/>
+    <br/>
     <div class="table_div">
         <b-table striped hover :items="res" :fields="fields" id="results"
-        :filter="confidenceFilter" :filter-function="filterTable">
+         :dark="true" :filter="confidenceFilter" :filter-function="filterTable">
           <template #cell(index)="data">
             {{ data.index + 1 }}
           </template>
@@ -13,10 +16,11 @@
     <br/>
 
     <b-form-input
-      id="input-small"
+      class="mx-auto"
+      id="confi"
       size="lg"
       v-model="confidenceFilter"
-      placeholder="Please enter confidence level in order to filter the results:">
+      placeholder="Confidence Level Filter:">
     </b-form-input>
 
   </div>
@@ -49,3 +53,10 @@ export default {
   },
 };
 </script>
+
+<style>
+#confi{
+  width: 30%;
+  font-weight: bold;
+}
+</style>

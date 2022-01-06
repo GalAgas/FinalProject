@@ -18,8 +18,7 @@ import {
   IconsPlugin,
   FormFilePlugin,
   ModalPlugin,
-}
-from 'bootstrap-vue';
+} from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import App from './App.vue';
 import router from './router';
