@@ -109,7 +109,8 @@ class WebService(object):
         message = ''
         float_regex = '[0-9]+\.[0-9]+'
         for i, row in enumerate(gene_correlation_txt):
-            row = row[:-1].decode("utf-8") # remove '\n' and convert from bytes to string
+            # remove '\n' and convert from bytes to string
+            row = row[:-1].decode("utf-8")
             row_tokens = row.split(" ")
             if not row_tokens[0].startswith(">contig"):
                 message = f'line {i+1} , column 1 starts with invalid value'
@@ -117,7 +118,7 @@ class WebService(object):
             if not row_tokens[1].startswith("len=") or not row_tokens[1][4:].isdecimal():
                 message = f'line {i+1}, column 2 has invalid value'
                 break
-            if not row_tokens[2].startswith("cov=") or not re.search(float_regex,row_tokens[2][4:]):
+            if not row_tokens[2].startswith("cov=") or not re.search(float_regex, row_tokens[2][4:]):
                 message = f'line {i+1}, column 3 has invalid value'
                 break
         return message
@@ -172,6 +173,7 @@ class WebService(object):
 
     def read_csv_file(self, file):
         return pd.read_csv(file, index_col=0)
+
 
 # open the server class. add endpoint and start running the server.
 web_service_app = WebService('webservice')
