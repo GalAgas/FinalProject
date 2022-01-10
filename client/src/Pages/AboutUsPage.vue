@@ -22,7 +22,7 @@
         class="mb-2"
       >
         <b-card-text>
-          Project Manager
+          Project Manager, Server Installations
           <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="https://www.linkedin.com/in/gal-agasi-188284207/" variant="primary">Go To My Linkedin</b-button>
@@ -40,7 +40,7 @@
         class="mb-2"
       >
         <b-card-text>
-          The Future Husband of the Project Manager
+          Analysis & Design, QA
           <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="https://www.linkedin.com/in/guy-zaidman-51bb43154/" variant="primary">Go To My Linkedin</b-button>
@@ -72,7 +72,7 @@
         class="mb-2"
       >
         <b-card-text>
-          Frontend Developer and excellent in Vue
+          Frontend Developer
           <b-icon icon="person-circle" animation="throb" font-scale="1"></b-icon>
         </b-card-text>
         <b-button href="https://www.linkedin.com/in/tomer-varon-a9b79722a/" variant="primary">Go To My Linkedin</b-button>
