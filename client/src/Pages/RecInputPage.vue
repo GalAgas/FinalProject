@@ -43,21 +43,35 @@
           <b-button
             size="lg"
             pill variant="info"
-            :disabled="buttonDisabled"
+            :disabled="nextButtonDisabled"
             class="ml-5w-75"
             v-on:click="handleNext">
             Next
           </b-button>
-          <!--b-button
-            size="lg"
-            pill variant="info"
-            :disabled="buttonDisabled"
-            class="ml-5w-75"
-            v-on:click="handleSubmit">
-            Submit
-          </b-button-->
       </b-form>
       <b-form v-if="!step1">
+        <b-form-group>
+          <b-form-select
+            v-model="$v.Inputs.ageSelected.$model"
+            :options="Inputs.ageOptions"
+            :state="validatePatientState('ageSelected')">
+           </b-form-select>
+          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
+            Patient ID must contain only digits
+          </b-form-invalid-feedback-->
+        </b-form-group>
+        <b-form-group>
+          <b-form-input
+            id="input-small"
+            size="lg"
+            v-model="$v.form.PatientID.$model"
+            :state="validateState('PatientID')"
+            placeholder="Enter Patient ID">
+          </b-form-input>
+          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
+            Patient ID must contain only digits
+          </b-form-invalid-feedback-->
+        </b-form-group>
         <b-button
           size="lg"
           pill variant="info"
@@ -68,7 +82,7 @@
         <b-button
           size="lg"
           pill variant="info"
-          :disabled="buttonDisabled"
+          :disabled="submitButtonDisabled"
           class="ml-5w-75"
           v-on:click="handleSubmit">
           Submit
@@ -92,9 +106,6 @@ export default {
       form: {
         PatientID: '',
       },
-      forminputs: {
-        age: '',
-      },
       csvFile: null,
       txtFile: null,
       msg: '',
@@ -102,7 +113,18 @@ export default {
       step1: true,
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
-
+      Inputs: {
+        ageSelected: '',
+        ageOptions: [
+          { value: '', text: 'Select patient age' },
+          { value: '0-5', text: '0-5' },
+          { value: '6-17', text: '6-17' },
+          { value: '18-39', text: '18-39' },
+          { value: '40-59', text: '40-59' },
+          { value: '60-79', text: '60-79' },
+          { value: '80+', text: '80+' },
+        ],
+      },
     };
   },
   validations: {
@@ -110,6 +132,11 @@ export default {
       PatientID: {
         required,
         integer,
+      },
+    },
+    Inputs: {
+      ageSelected: {
+        required,
       },
     },
   },
@@ -120,11 +147,14 @@ export default {
     validateTXT() {
       return this.txtFile && this.txtFile.type.startsWith('text/');
     },
-    buttonDisabled() {
+    nextButtonDisabled() {
       if (this.form.PatientID === '' || this.csvFile == null || this.txtFile == null || !this.validateTXT || !this.validateCSV || !this.validateState('PatientID')) {
         return true;
       }
       return false;
+    },
+    submitButtonDisabled() {
+      return true;
     },
   },
   watch: {
@@ -138,6 +168,10 @@ export default {
   methods: {
     validateState(param) {
       const { $dirty, $error } = this.$v.form[param];
+      return $dirty ? !$error : null;
+    },
+    validatePatientState(param) {
+      const { $dirty, $error } = this.$v.Inputs[param];
       return $dirty ? !$error : null;
     },
     handleNext() {
