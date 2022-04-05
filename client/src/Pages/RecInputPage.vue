@@ -2,8 +2,8 @@
   <div>
     <h1> <B>Recommendation Inputs Page</B> </h1>
     <div class="formDiv">
-    <h2> <B>Please enter patient ID & NGS csv file :</B> </h2>
-      <b-form>
+      <b-form v-if="step1">
+        <h2> <B>Please enter patient ID & NGS csv file :</B> </h2>
         <b-form-group>
           <b-form-input
             id="input-small"
@@ -12,9 +12,6 @@
             :state="validateState('PatientID')"
             placeholder="Enter Patient ID">
           </b-form-input>
-          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.required">
-            Patient ID is required.
-          </b-form-invalid-feedback-->
           <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
             Patient ID must contain only digits
           </b-form-invalid-feedback>
@@ -24,7 +21,7 @@
           accept=".csv"
           v-model="csvFile"
           :state="validateCSV"
-          placeholder="Choose the require Gene Correlation file or drop it here..."
+          :placeholder="csvFileName"
           drop-placeholder="Drop file here..."
           ></b-form-file>
           <b-form-invalid-feedback :state="validateCSV">
@@ -36,7 +33,7 @@
           accept=".txt"
           v-model="txtFile"
           :state="validateTXT"
-          placeholder="Choose the require txt file or drop it here..."
+          :placeholder="txtFileName"
           drop-placeholder="Drop file here..."
           ></b-form-file>
           <b-form-invalid-feedback :state="validateTXT">
@@ -48,9 +45,34 @@
             pill variant="info"
             :disabled="buttonDisabled"
             class="ml-5w-75"
-            v-on:click="handleClick">
-            Submit
+            v-on:click="handleNext">
+            Next
           </b-button>
+          <!--b-button
+            size="lg"
+            pill variant="info"
+            :disabled="buttonDisabled"
+            class="ml-5w-75"
+            v-on:click="handleSubmit">
+            Submit
+          </b-button-->
+      </b-form>
+      <b-form v-if="!step1">
+        <b-button
+          size="lg"
+          pill variant="info"
+          class="ml-5w-75"
+          v-on:click="handleBack">
+          Back
+        </b-button>
+        <b-button
+          size="lg"
+          pill variant="info"
+          :disabled="buttonDisabled"
+          class="ml-5w-75"
+          v-on:click="handleSubmit">
+          Submit
+        </b-button>
       </b-form>
     </div>
   </div>
@@ -70,10 +92,17 @@ export default {
       form: {
         PatientID: '',
       },
+      forminputs: {
+        age: '',
+      },
       csvFile: null,
       txtFile: null,
       msg: '',
       popUp: '',
+      step1: true,
+      txtFileName: 'Choose the require txt file or drop it here...',
+      csvFileName: 'Choose the require Gene Correlation file or drop it here...',
+
     };
   },
   validations: {
@@ -98,12 +127,26 @@ export default {
       return false;
     },
   },
+  watch: {
+    txtFile(newval) {
+      this.txtFileName = newval.name;
+    },
+    csvFile(newval) {
+      this.csvFileName = newval.name;
+    },
+  },
   methods: {
     validateState(param) {
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
-    handleClick() {
+    handleNext() {
+      this.step1 = false;
+    },
+    handleBack() {
+      this.step1 = true;
+    },
+    handleSubmit() {
       const bodyFormData = new FormData();
       bodyFormData.append('id', this.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
