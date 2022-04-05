@@ -142,6 +142,7 @@ export default {
     },
     handleNext() {
       this.step1 = false;
+      
     },
     handleBack() {
       this.step1 = true;
