@@ -18,6 +18,8 @@ import {
   IconsPlugin,
   FormFilePlugin,
   ModalPlugin,
+  FormRadioPlugin,
+  FormTagsPlugin,
 } from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import App from './App.vue';
@@ -40,6 +42,8 @@ import router from './router';
   IconsPlugin,
   FormFilePlugin,
   ModalPlugin,
+  FormRadioPlugin,
+  FormTagsPlugin,
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 

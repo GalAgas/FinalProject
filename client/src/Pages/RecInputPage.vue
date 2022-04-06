@@ -52,26 +52,93 @@
       <b-form v-if="!step1">
         <b-form-group>
           <b-form-select
+            id="age"
             v-model="$v.Inputs.ageSelected.$model"
             :options="Inputs.ageOptions"
-            :state="validatePatientState('ageSelected')">
+            :state="validatePatientState('ageSelected')"
+            size="sm">
            </b-form-select>
-          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
-            Patient ID must contain only digits
-          </b-form-invalid-feedback-->
         </b-form-group>
-        <b-form-group>
-          <b-form-input
-            id="input-small"
-            size="lg"
-            v-model="$v.form.PatientID.$model"
-            :state="validateState('PatientID')"
-            placeholder="Enter Patient ID">
-          </b-form-input>
-          <!--b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
-            Patient ID must contain only digits
-          </b-form-invalid-feedback-->
+          <b-form-radio-group
+            v-model="Inputs.genderSelected"
+            :options="Inputs.genderOptions"
+            name="Gender"
+          ></b-form-radio-group>
+        <div class="mt-2">Creatinine Level: {{ Inputs.creatinine }}</div>
+        <b-form-input
+          v-model="Inputs.creatinine"
+          type="range"
+          min="0" max="3" step="0.1"></b-form-input>
+        <b-form-checkbox
+          v-model="Inputs.fever"
+          switch>
+          Fever
+        </b-form-checkbox>
+        <b-form-checkbox
+          v-model="Inputs.flankPain"
+          switch>
+          Flank Pain
+        </b-form-checkbox>
+        <b-form-checkbox
+          v-model="Inputs.Dysuria"
+          switch>
+          Dysuria
+        </b-form-checkbox>
+        <div>
+        <b-form-group label="More Drugs of Patient" label-for="tags-with-dropdown">
+          <b-form-tags
+            id="tags-with-dropdown"
+            v-model="drugsValue">
+            <template v-slot="{ tags, disabled, removeTag, addTag }">
+              <ul v-if="tags.length > 0" class="list-inline d-inline-block">
+                <li v-for="tag in tags" :key="tag" class="list-inline-item">
+                  <b-form-tag
+                    @remove="removeTag(tag)"
+                    :title="tag"
+                    :disabled="disabled"
+                    variant="info"
+                  >{{ tag }}</b-form-tag>
+                </li>
+              </ul>
+              <b-dropdown size="sm" variant="outline-secondary" block menu-class="w-100">
+                <template #button-content>
+                  <b-icon icon="tag-fill"></b-icon> Choose tags
+                </template>
+                <b-dropdown-form @submit.stop.prevent="() => {}">
+                  <b-form-group
+                    label="Search tags"
+                    label-for="tag-search-input"
+                    label-cols-md="auto"
+                    class="mb-0"
+                    label-size="sm"
+                    :description="searchDesc"
+                    :disabled="disabled"
+                  >
+                    <b-form-input
+                      v-model="Inputs.drugsSearch"
+                      id="tag-search-input"
+                      type="search"
+                      size="lg"
+                      autocomplete="off"
+                    ></b-form-input>
+                  </b-form-group>
+                </b-dropdown-form>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item-button
+                  v-for="option in availableOptions"
+                  :key="option"
+                  @click="onDrugsOptionClick({ option, addTag })"
+                >
+                  {{ option }}
+                </b-dropdown-item-button>
+                <b-dropdown-text v-if="availableOptions.length === 0">
+                  There are no tags available to select
+                </b-dropdown-text>
+              </b-dropdown>
+            </template>
+          </b-form-tags>
         </b-form-group>
+        </div>
         <b-button
           size="lg"
           pill variant="info"
@@ -110,7 +177,7 @@ export default {
       txtFile: null,
       msg: '',
       popUp: '',
-      step1: true,
+      step1: false,
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {
@@ -124,7 +191,19 @@ export default {
           { value: '60-79', text: '60-79' },
           { value: '80+', text: '80+' },
         ],
+        genderSelected: '',
+        genderOptions: [
+          { text: 'Male', value: 'Male' },
+          { text: 'Female', value: 'Female' },
+        ],
+        drugsOptions: ['A', 'AB', 'B', 'C', 'CB'],
+        drugsSearch: '',
+        creatinine: '1.5',
+        fever: false,
+        flankPain: false,
+        Dysuria: false,
       },
+      drugsValue: [],
     };
   },
   validations: {
@@ -155,6 +234,26 @@ export default {
     },
     submitButtonDisabled() {
       return true;
+    },
+    criteria() {
+      // Compute the search criteria
+      return this.Inputs.drugsSearch.trim().toLowerCase();
+    },
+    availableOptions() {
+      // Filter out already selected options
+      const options = this.Inputs.drugsOptions.filter((opt) => this.drugsValue.indexOf(opt) === -1);
+      if (this.criteria) {
+        // Show only options that match criteria
+        return options.filter((opt) => opt.toLowerCase().indexOf(this.criteria) > -1);
+      }
+      // Show all options available
+      return options;
+    },
+    searchDesc() {
+      if (this.criteria && this.availableOptions.length === 0) {
+        return 'There are no tags matching your search criteria';
+      }
+      return '';
     },
   },
   watch: {
@@ -219,6 +318,10 @@ export default {
           console.log(err);
         });
     },
+    onDrugsOptionClick({ option, addTag }) {
+      addTag(option);
+      this.Inputs.drugsSearch = '';
+    },
   },
 };
 </script>
@@ -235,5 +338,9 @@ export default {
   width: 20%;
   background-color: #454545!important;
   border-color: #000000!important;
+}
+
+#age{
+  width: 20%;
 }
 </style>
