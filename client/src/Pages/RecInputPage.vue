@@ -102,7 +102,7 @@
               </ul>
               <b-dropdown size="sm" variant="outline-secondary" block menu-class="w-100">
                 <template #button-content>
-                  <b-icon icon="tag-fill"></b-icon> Choose tags
+                  <b-icon icon="tag-fill"></b-icon> Choose Patient Drugs
                 </template>
                 <b-dropdown-form @submit.stop.prevent="() => {}">
                   <b-form-group
@@ -177,7 +177,7 @@ export default {
       txtFile: null,
       msg: '',
       popUp: '',
-      step1: false,
+      step1: true,
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {
@@ -233,7 +233,7 @@ export default {
       return false;
     },
     submitButtonDisabled() {
-      return true;
+      return this.Inputs.genderSelected === '' || this.Inputs.ageSelected === '';
     },
     criteria() {
       // Compute the search criteria
@@ -258,10 +258,18 @@ export default {
   },
   watch: {
     txtFile(newval) {
-      this.txtFileName = newval.name;
+      if (this.txtFile) {
+        this.txtFileName = newval.name;
+      } else {
+        this.txtFileName = 'Choose the require txt file or drop it here...';
+      }
     },
     csvFile(newval) {
-      this.csvFileName = newval.name;
+      if (this.csvFile) {
+        this.csvFileName = newval.name;
+      } else {
+        this.csvFileName = 'Choose the require Gene Correlation file or drop it here...';
+      }
     },
   },
   methods: {
@@ -284,6 +292,13 @@ export default {
       bodyFormData.append('id', this.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
       bodyFormData.append('gene_correlation_txt', this.txtFile);
+      bodyFormData.append('patientAge', this.Inputs.ageSelected);
+      bodyFormData.append('patientGender', this.Inputs.genderSelected);
+      bodyFormData.append('patientCreatinine', this.Inputs.creatinine);
+      bodyFormData.append('patientFever', this.Inputs.fever);
+      bodyFormData.append('patientFlankPain', this.Inputs.flankPain);
+      bodyFormData.append('patientDysuria', this.Inputs.Dysuria);
+      bodyFormData.append('patientDrugsInUse', this.drugsValue);
       const config = {
         headers: { 'content-type': 'multipart/form-data' },
       };
