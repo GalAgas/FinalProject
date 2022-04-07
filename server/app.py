@@ -84,10 +84,10 @@ class WebService(object):
             # print(txt_file)
             message = self.check_valid_csv(csv_file)
             if message != '':
-                return self.response(message, 400)
+                return self.response('Error in csv file! \n' + message, 400)
             message = self.check_valid_txt(txt_file)
             if message != '':
-                return self.response(message, 400)
+                return self.response('Error in txt file! \n' + message, 400)
             mic = self.mic_predictor.predict(csv_file, txt_file)
             initial_ranking = self.treatment_ranking.rank(mic)
             final_ranking = self.context_aware.rank(initial_ranking)
