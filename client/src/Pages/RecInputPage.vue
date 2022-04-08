@@ -49,7 +49,7 @@
             Next
           </b-button>
       </b-form>
-      <b-form v-if="!step1">
+      <b-form id="inputform" v-if="!step1">
         <b-form-group>
           <b-form-select
             id="age"
@@ -289,7 +289,7 @@ export default {
     },
     handleSubmit() {
       const bodyFormData = new FormData();
-      bodyFormData.append('id', this.PatientID);
+      bodyFormData.append('id', this.form.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
       bodyFormData.append('gene_correlation_txt', this.txtFile);
       bodyFormData.append('patientAge', this.Inputs.ageSelected);
@@ -302,7 +302,6 @@ export default {
       const config = {
         headers: { 'content-type': 'multipart/form-data' },
       };
-      // console.log('in handle click');
       const path = 'http://localhost:5000/generate';
       axios.post(path, bodyFormData, config)
         .then((res) => {
@@ -355,7 +354,13 @@ export default {
   border-color: #000000!important;
 }
 
-#age{
-  width: 20%;
+#inputform{
+  width: 80%;
+  padding-left: 20%;
 }
+
+#age{
+  width: 50%;
+}
+
 </style>

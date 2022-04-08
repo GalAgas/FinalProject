@@ -76,6 +76,13 @@ class WebService(object):
         gene_correlation_csv = request.files['gene_correlation_csv']
         gene_correlation_txt = request.files['gene_correlation_txt']
         patient_id = request.form['id']
+        patient_age = request.form['patientAge']
+        patient_gender = request.form['patientGender']
+        patient_creatinine = float(request.form['patientCreatinine'])
+        patient_fever = json.loads(request.form['patientFever'])
+        patient_plank_pain = json.loads(request.form['patientFlankPain'])
+        patient_dysuria = json.loads(request.form['patientDysuria'])
+        patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         try:
             if not self.check_valid_id(patient_id):
                 return self.response("Invalid Id", 409)
