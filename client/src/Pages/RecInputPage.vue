@@ -85,6 +85,7 @@
           Dysuria
         </b-form-checkbox>
         <div>
+
         <b-form-group label="More Drugs of Patient" label-for="tags-with-dropdown">
           <b-form-tags
             id="tags-with-dropdown"
@@ -196,7 +197,7 @@ export default {
           { text: 'Male', value: 'Male' },
           { text: 'Female', value: 'Female' },
         ],
-        drugsOptions: ['A', 'AB', 'B', 'C', 'CB'],
+        drugsOptions: ['Abilify', 'Ativan', 'Advil', 'C', 'CB'],
         drugsSearch: '',
         creatinine: '1.5',
         fever: false,

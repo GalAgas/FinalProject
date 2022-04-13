@@ -83,6 +83,7 @@ class WebService(object):
         patient_plank_pain = json.loads(request.form['patientFlankPain'])
         patient_dysuria = json.loads(request.form['patientDysuria'])
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
+        print(patient_drugs_in_use)
         try:
             if not self.check_valid_id(patient_id):
                 return self.response("Invalid Id", 409)
