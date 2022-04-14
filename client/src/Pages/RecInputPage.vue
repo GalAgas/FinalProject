@@ -222,7 +222,7 @@ export default {
   },
   computed: {
     validateCSV() {
-      return this.csvFile && this.csvFile.type.endsWith('.ms-excel');
+      return this.csvFile && this.csvFile.type.endsWith('csv');
     },
     validateTXT() {
       return this.txtFile && this.txtFile.type.startsWith('text/');
