@@ -51,13 +51,13 @@
       </b-form>
       <b-form id="inputform" v-if="!step1">
         <b-form-group>
-          <b-form-select
-            id="age"
-            v-model="$v.Inputs.ageSelected.$model"
-            :options="Inputs.ageOptions"
-            :state="validatePatientState('ageSelected')"
-            size="sm">
-           </b-form-select>
+          <b-form-input
+            id="input-small"
+            size="lg"
+            v-model="$v.Inputs.age.$model"
+            :state="validatePatientState('age')"
+            placeholder="Enter Patient Age">
+          </b-form-input>
         </b-form-group>
           <b-form-radio-group
             v-model="Inputs.genderSelected"
@@ -164,7 +164,7 @@
 import axios from 'axios';
 import {
   required,
-  integer,
+  numeric,
 } from 'vuelidate/lib/validators';
 
 export default {
@@ -182,16 +182,16 @@ export default {
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {
-        ageSelected: '',
-        ageOptions: [
-          { value: '', text: 'Select patient age' },
-          { value: '0-5', text: '0-5' },
-          { value: '6-17', text: '6-17' },
-          { value: '18-39', text: '18-39' },
-          { value: '40-59', text: '40-59' },
-          { value: '60-79', text: '60-79' },
-          { value: '80+', text: '80+' },
-        ],
+        age: '',
+        // ageOptions: [
+        //   { value: '', text: 'Select patient age' },
+        //   { value: '0-5', text: '0-5' },
+        //   { value: '6-17', text: '6-17' },
+        //   { value: '18-39', text: '18-39' },
+        //   { value: '40-59', text: '40-59' },
+        //   { value: '60-79', text: '60-79' },
+        //   { value: '80+', text: '80+' },
+        // ],
         genderSelected: '',
         genderOptions: [
           { text: 'Male', value: 'Male' },
@@ -211,12 +211,13 @@ export default {
     form: {
       PatientID: {
         required,
-        integer,
+        numeric,
       },
     },
     Inputs: {
-      ageSelected: {
+      age: {
         required,
+        numeric,
       },
     },
   },
@@ -234,7 +235,7 @@ export default {
       return false;
     },
     submitButtonDisabled() {
-      return this.Inputs.genderSelected === '' || this.Inputs.ageSelected === '';
+      return this.Inputs.genderSelected === '' || this.Inputs.age === '';
     },
     criteria() {
       // Compute the search criteria
@@ -293,7 +294,7 @@ export default {
       bodyFormData.append('id', this.form.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
       bodyFormData.append('gene_correlation_txt', this.txtFile);
-      bodyFormData.append('patientAge', this.Inputs.ageSelected);
+      bodyFormData.append('patientAge', this.Inputs.age);
       bodyFormData.append('patientGender', this.Inputs.genderSelected);
       bodyFormData.append('patientCreatinine', this.Inputs.creatinine);
       bodyFormData.append('patientFever', this.Inputs.fever);
