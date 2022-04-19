@@ -178,7 +178,7 @@ export default {
       txtFile: null,
       msg: '',
       popUp: '',
-      step1: true,
+      step1: false,
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {

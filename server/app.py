@@ -73,8 +73,8 @@ class WebService(object):
         the function validates that input is valid and then generates a treatment recommendation table based on input.
         :return: recommendation table as json
         """
-        gene_correlation_csv = request.files['gene_correlation_csv']
-        gene_correlation_txt = request.files['gene_correlation_txt']
+        # gene_correlation_csv = request.files['gene_correlation_csv']
+        # gene_correlation_txt = request.files['gene_correlation_txt']
         patient_id = request.form['id']
         patient_age = request.form['patientAge']
         patient_gender = request.form['patientGender']
@@ -95,7 +95,7 @@ class WebService(object):
             if message != '':
                 return self.response('Error in txt file! \n' + message, 400)
             mic = self.mic_predictor.predict(csv_file, txt_file)
-            initial_ranking = self.treatment_ranking.rank(mic)
+            initial_ranking = self.treatment_ranking.rank(None, patient_drugs_in_use)
             # check if needed here
             self.context_aware.open_db()
             final_ranking = self.context_aware.rank(initial_ranking)
