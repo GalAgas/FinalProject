@@ -83,13 +83,11 @@ class WebService(object):
         patient_plank_pain = json.loads(request.form['patientFlankPain'])
         patient_dysuria = json.loads(request.form['patientDysuria'])
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
-        print(patient_drugs_in_use)
         try:
             if not self.check_valid_id(patient_id):
                 return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
-            # print(txt_file)
             message = self.check_valid_csv(csv_file)
             if message != '':
                 return self.response('Error in csv file! \n' + message, 400)
@@ -98,7 +96,11 @@ class WebService(object):
                 return self.response('Error in txt file! \n' + message, 400)
             mic = self.mic_predictor.predict(csv_file, txt_file)
             initial_ranking = self.treatment_ranking.rank(mic)
+            # check if needed here
+            self.context_aware.open_db()
             final_ranking = self.context_aware.rank(initial_ranking)
+            # check if needed here
+            self.context_aware.close_db()
             return jsonify(final_ranking)
         except Exception as e:
             print(e)
