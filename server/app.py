@@ -73,8 +73,8 @@ class WebService(object):
         the function validates that input is valid and then generates a treatment recommendation table based on input.
         :return: recommendation table as json
         """
-        gene_correlation_csv = request.files['gene_correlation_csv']
-        gene_correlation_txt = request.files['gene_correlation_txt']
+        # gene_correlation_csv = request.files['gene_correlation_csv']
+        # gene_correlation_txt = request.files['gene_correlation_txt']
         patient_id = request.form['id']
         patient_age = request.form['patientAge']
         patient_gender = request.form['patientGender']
@@ -85,19 +85,20 @@ class WebService(object):
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         print(patient_drugs_in_use)
         try:
-            if not self.check_valid_id(patient_id):
-                return self.response("Invalid Id", 409)
-            csv_file = self.read_csv_file(gene_correlation_csv)
-            txt_file = self.read_txt_file(gene_correlation_txt)
-            # print(txt_file)
-            message = self.check_valid_csv(csv_file)
-            if message != '':
-                return self.response('Error in csv file! \n' + message, 400)
-            message = self.check_valid_txt(txt_file)
-            if message != '':
-                return self.response('Error in txt file! \n' + message, 400)
-            mic = self.mic_predictor.predict(csv_file, txt_file)
-            initial_ranking = self.treatment_ranking.rank(mic)
+            # if not self.check_valid_id(patient_id):
+            #     return self.response("Invalid Id", 409)
+            # csv_file = self.read_csv_file(gene_correlation_csv)
+            # txt_file = self.read_txt_file(gene_correlation_txt)
+            # # print(txt_file)
+            # message = self.check_valid_csv(csv_file)
+            # if message != '':
+            #     return self.response('Error in csv file! \n' + message, 400)
+            # message = self.check_valid_txt(txt_file)
+            # if message != '':
+            #     return self.response('Error in txt file! \n' + message, 400)
+            # mic = self.mic_predictor.predict(csv_file, txt_file)
+            # initial_ranking = self.treatment_ranking.rank(mic)
+            initial_ranking = self.treatment_ranking.rank(None, patient_drugs_in_use)
             final_ranking = self.context_aware.rank(initial_ranking)
             return jsonify(final_ranking)
         except Exception as e:

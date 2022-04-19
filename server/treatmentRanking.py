@@ -1,19 +1,26 @@
 from collections import defaultdict
-
+from ddi import SeleniumSearch
 import pandas as pd
 
 
 class treatmentRanking:
     def __init__(self):
-        pass
+        self.selsearch = SeleniumSearch()
 
-    def rank(self, mic):
+    def rank(self, mic, drugs_in_use):
         """
         create initial rank to treatments based on MIC values
         future implement - will consider drugs traits and chemoinformatics.
         :param mic: all MIC values based on system inputs, dataframe
         :return dataframe of possible treatments
         """
+        
+        drugs = drugs_in_use
+        # drugs.insert(0,'ciprofloxacin')
+        
+        self.selsearch.search_drugs(drugs)
+        
+        
         # false return
         dict_initial_ranking = {
             'ceftriaxone': ['ceftriaxone', '10mg', 0.6, "2 Times a day with alot of water", 0.2],
