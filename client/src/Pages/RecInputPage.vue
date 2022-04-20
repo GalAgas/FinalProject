@@ -141,6 +141,7 @@
         </b-form-group>
         </div>
         <b-button
+          id="backbtn"
           size="lg"
           pill variant="info"
           class="ml-5w-75"
@@ -148,6 +149,7 @@
           Back
         </b-button>
         <b-button
+          id="submitbtn"
           size="lg"
           pill variant="info"
           :disabled="submitButtonDisabled"
@@ -178,7 +180,7 @@ export default {
       txtFile: null,
       msg: '',
       popUp: '',
-      step1: false,
+      step1: true,
       txtFileName: 'Choose the require txt file or drop it here...',
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {
@@ -363,6 +365,14 @@ export default {
 
 #age{
   width: 50%;
+}
+
+#backbtn{
+  margin-right: 3%;
+}
+
+#submitbtn{
+  margin-left: 3%;
 }
 
 </style>

@@ -73,8 +73,8 @@ class WebService(object):
         the function validates that input is valid and then generates a treatment recommendation table based on input.
         :return: recommendation table as json
         """
-        # gene_correlation_csv = request.files['gene_correlation_csv']
-        # gene_correlation_txt = request.files['gene_correlation_txt']
+        gene_correlation_csv = request.files['gene_correlation_csv']
+        gene_correlation_txt = request.files['gene_correlation_txt']
         patient_id = request.form['id']
         patient_age = request.form['patientAge']
         patient_gender = request.form['patientGender']
