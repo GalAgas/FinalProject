@@ -94,14 +94,22 @@ class WebService(object):
             message = self.check_valid_txt(txt_file)
             if message != '':
                 return self.response('Error in txt file! \n' + message, 400)
-            mic = self.mic_predictor.predict(csv_file, txt_file)
-            initial_ranking = self.treatment_ranking.rank(None, patient_drugs_in_use)
+            
+            # MIC prediction
+            anti_dict = self.mic_predictor.predict(csv_file, txt_file)
+            # DDI update
+            anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
+            
             # check if needed here
             self.context_aware.open_db()
-            final_ranking = self.context_aware.rank(initial_ranking)
+            # GFR elimination & Coverage extraction
+            anti_dict = self.context_aware.update(anti_dict)
             # check if needed here
             self.context_aware.close_db()
-            return jsonify(final_ranking)
+            
+            anti_dict = self.sort(anti_dict)
+            
+            return jsonify(anti_dict)
         except Exception as e:
             print(e)
             return self.response("Something went worng!", 400)

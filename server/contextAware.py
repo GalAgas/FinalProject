@@ -11,15 +11,15 @@ class contextAware:
     def open_db(self):
         self.db = Database()
 
-    def rank(self, initial_ranking):
+    def update(self, anti_dict):
         """
-        future implement - will consider patient record data and medical center data.
-        :param initial_ranking: inital ranking of treatments, dataframe
-        :return dataframe of possible treatments
+        udpating antiobtics dict with the relevent GFR and coverage data per antibiotic
+        :param anti_dict: current data on antibiotics, dict
+        :return dict with updated values of GFR and Coverage of possible antibiotics treatments
         """
-        ranked_treatments = initial_ranking.to_dict(orient='records')
+        # ranked_treatments = initial_ranking.to_dict(orient='records')
 
-        return ranked_treatments
+        return anti_dict
 
     def calculate_GFR(self, serum_cr, age, female):
         res = 175 * (serum_cr**(-1.154)) * (age**(-0.203))
@@ -27,5 +27,5 @@ class contextAware:
             res *= 0.742
         return res
 
-    def sort_by_coverage(self, drugs_dict):
+    def get_coverage(self, drugs_dict):
         pass
