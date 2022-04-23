@@ -20,6 +20,10 @@ class Database:
         """
         self.conn.commit()
 
+    def open_connection(self):
+        current_path = Path(__file__).parent.absolute()
+        self.conn = sqlite3.connect(str(current_path)+'\\database.db', check_same_thread=False)
+
     def close_connection(self):
         """
         close the connection
@@ -44,6 +48,11 @@ class Database:
         sql_query ='''SELECT * FROM Antibiotics WHERE Name=?'''
         info = self.select_from_db(sql_query, antibiotic_name)
         return info
+
+    def get_all_antibiotics(self):
+        sql_query = '''SELECT * FROM Antibiotics'''
+        res = self.select_from_db(sql_query)
+        return res
 
     def insert_or_update_to_db(self, sql_query, *params):
         """

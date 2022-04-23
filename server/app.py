@@ -3,7 +3,7 @@ from pandas.core.indexes.base import Index
 from flask import Flask, jsonify, request, json, abort
 from flask_cors import CORS
 from MICPredictor import MICPredictor
-from treatmentRanking import treatmentRanking
+# from treatmentRanking import treatmentRanking
 from contextAware import contextAware
 import re
 
@@ -37,8 +37,9 @@ class WebService(object):
         # enable CORS
         CORS(self.app, resources={r'/*': {'origins': '*'}})
         self.mic_predictor = MICPredictor()
-        self.treatment_ranking = treatmentRanking()
+        # self.treatment_ranking = treatmentRanking()
         self.context_aware = contextAware()
+        self.context_aware.create_db()
 
     def run(self):
         self.app.run(debug=True)
@@ -76,8 +77,8 @@ class WebService(object):
         gene_correlation_csv = request.files['gene_correlation_csv']
         gene_correlation_txt = request.files['gene_correlation_txt']
         patient_id = request.form['id']
-        patient_age = request.form['patientAge']
-        patient_gender = request.form['patientGender']
+        patient_age = int(request.form['patientAge'])
+        patient_isFemale = request.form['patientGender'] == 'Female'
         patient_creatinine = float(request.form['patientCreatinine'])
         patient_fever = json.loads(request.form['patientFever'])
         patient_plank_pain = json.loads(request.form['patientFlankPain'])
@@ -98,14 +99,12 @@ class WebService(object):
             # MIC prediction
             anti_dict = self.mic_predictor.predict(csv_file, txt_file)
             # DDI update
-            anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
-            
-            # check if needed here
-            self.context_aware.open_db()
+            # anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
+
             # GFR elimination & Coverage extraction
-            anti_dict = self.context_aware.update(anti_dict)
-            # check if needed here
-            self.context_aware.close_db()
+            anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
+            # # check if needed here
+            # self.context_aware.close_db()
             
             anti_dict = self.sort(anti_dict)
             
