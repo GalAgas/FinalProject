@@ -94,10 +94,10 @@ class Database:
             "Minocyclin": ['Broad', -1],
             "Moxifloxacin": ['Broad', -1],
             "Nitrofurantoin": ['Narrow', -1],
-            "Pipracillin - tazobactam": ['Broad', -1],
+            "Pipracillin-tazobactam": ['Broad', -1],
             "Tetracycline": ['Broad', -1],
             "Tobramycin": ['Narrow', 30],
-            "TMP - SMX": ['Broad', -1],
+            "TMP-SMX": ['Broad', -1],
         }
         sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold)
         VALUES (?,?,?)

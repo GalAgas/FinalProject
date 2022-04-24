@@ -10,6 +10,9 @@
           <template #cell(index)="data">
             {{ data.index + 1 }}
           </template>
+          <!-- <template #cell(Drug Name)="data">
+            <a href="#" @click='linkCreate(data.items.Drug_Name)'>{{ data.items.Drug_Name+'t' }}</a>
+          </template> -->
         </b-table>
     </div>
     <br/>
@@ -34,7 +37,9 @@ export default {
     return {
       res: null,
       confidenceFilter: '',
-      fields: ['index', { key: 'Drug Name' }, { key: 'MIC' }, { key: 'MIC_Confidence' }, { key: 'Comments' }],
+      fields: ['index', { key: 'Drug_Name' }, { key: 'MIC' }, { key: 'MIC_Confidence' }, { key: 'Comments' }],
+      // fields: ['index', 'Drug_Name', { key: 'MIC' }, { key: 'MIC_Confidence' },
+      // { key: 'Comments' }],
     };
   },
   created() {
@@ -50,6 +55,11 @@ export default {
       }
       return true;
     },
+    // linkCreate(drugName) {
+    //   console.log(drugName);
+    //   const href = 'https://www.drugs.com/search.php?searchterm=';
+    //   return href + drugName;
+    // },
   },
 };
 </script>

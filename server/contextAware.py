@@ -32,7 +32,9 @@ class contextAware:
                 anti_dict[ab[1]].append(ab[2])
         self.db.close_connection()
 
-        return anti_dict
+        final_dict = self.convert_to_list_of_dicts(anti_dict)
+
+        return final_dict
 
     def calculate_GFR(self, serum_cr, age, female):
         res = 175 * (serum_cr**(-1.154)) * (age**(-0.203))
@@ -42,3 +44,9 @@ class contextAware:
 
     def get_coverage(self, drugs_dict):
         pass
+
+    def convert_to_list_of_dicts(self, anti_dict):
+        df = pd.DataFrame.from_dict(anti_dict, columns=[
+            'Drug_Name', 'MIC', 'MIC_Confidence', 'Comments', 'Rank', 'Coverage'], orient='index')
+        final_dict = df.to_dict(orient='records')
+        return final_dict

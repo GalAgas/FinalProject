@@ -20,6 +20,7 @@ import {
   ModalPlugin,
   FormRadioPlugin,
   FormTagsPlugin,
+  LinkPlugin,
 } from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import App from './App.vue';
@@ -44,6 +45,7 @@ import router from './router';
   ModalPlugin,
   FormRadioPlugin,
   FormTagsPlugin,
+  LinkPlugin,
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
