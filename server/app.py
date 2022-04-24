@@ -106,7 +106,7 @@ class WebService(object):
             # # check if needed here
             # self.context_aware.close_db()
             
-            anti_dict = self.sort(anti_dict)
+            # anti_dict = self.sort(anti_dict)
             
             return jsonify(anti_dict)
         except Exception as e:
