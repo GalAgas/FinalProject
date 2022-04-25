@@ -76,7 +76,7 @@ class WebService(object):
         """
         gene_correlation_csv = request.files['gene_correlation_csv']
         gene_correlation_txt = request.files['gene_correlation_txt']
-        patient_id = request.form['id']
+        # patient_id = request.form['id']
         patient_age = int(request.form['patientAge'])
         patient_isFemale = request.form['patientGender'] == 'Female'
         patient_creatinine = float(request.form['patientCreatinine'])
@@ -85,8 +85,8 @@ class WebService(object):
         patient_dysuria = json.loads(request.form['patientDysuria'])
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         try:
-            if not self.check_valid_id(patient_id):
-                return self.response("Invalid Id", 409)
+            # if not self.check_valid_id(patient_id):
+            #     return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
             message = self.check_valid_csv(csv_file)
@@ -113,9 +113,9 @@ class WebService(object):
             print(e)
             return self.response("Something went worng!", 400)
 
-    def check_valid_id(self, patient_id):
-        # check in future public patients DB that patient id exists.
-        return True
+    # def check_valid_id(self, patient_id):
+    #     # check in future public patients DB that patient id exists.
+    #     return True
 
     def check_valid_txt(self, gene_correlation_txt):
         """
