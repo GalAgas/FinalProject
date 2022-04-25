@@ -10,21 +10,36 @@
           <template #cell(index)="data">
             {{ data.index + 1 }}
           </template>
-          <!-- <template #cell(Drug Name)="data">
-            <a href="#" @click='linkCreate(data.items.Drug_Name)'>{{ data.items.Drug_Name+'t' }}</a>
+          <!-- <template #cell(Details)="data">
+            <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`">More Details</a>
           </template> -->
+          <template #cell(Drug_Name)="data">
+            <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">{{ data.item.Drug_Name }}</a>
+          </template>
         </b-table>
+    </div>
+    <br/>
+    <div>
+      <h4><b>* Click On Drug Name For More Information &nbsp;
+        <b-icon icon="info-circle-fill" scale="2">
+      </b-icon></b></h4>
     </div>
     <br/>
     <br/>
 
-    <b-form-input
-      class="mx-auto"
-      id="confi"
-      size="lg"
-      v-model="confidenceFilter"
-      placeholder="Confidence Level Filter:">
-    </b-form-input>
+    <b-form-group id="confi" label="Confidence Level Filter: " label-for="confi"
+      label-size="lg"
+      label-cols-sm="4"
+      label-cols-lg="3"
+      content-cols-sm
+      content-cols-lg="7">
+      <b-form-input
+        id="confibox"
+        size="md"
+        v-model="confidenceFilter"
+        placeholder="Enter Number between 0 and 1">
+      </b-form-input>
+    </b-form-group>
 
   </div>
 </template>
@@ -37,9 +52,7 @@ export default {
     return {
       res: null,
       confidenceFilter: '',
-      fields: ['index', { key: 'Drug_Name' }, { key: 'MIC' }, { key: 'MIC_Confidence' }, { key: 'Comments' }],
-      // fields: ['index', 'Drug_Name', { key: 'MIC' }, { key: 'MIC_Confidence' },
-      // { key: 'Comments' }],
+      fields: ['index', 'Drug_Name', { key: 'MIC' }, { key: 'MIC_Confidence' }, { key: 'Comments' }],
     };
   },
   created() {
@@ -66,7 +79,11 @@ export default {
 
 <style>
 #confi{
-  width: 30%;
+  width: 100%;
   font-weight: bold;
+  margin-left: 25%;
+}
+#confibox{
+  width: 40%;
 }
 </style>

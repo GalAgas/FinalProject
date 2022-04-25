@@ -33,14 +33,15 @@ export default {
 }
 
 #app:before {
-  content: ' ';
+  content: '';
   display: block;
-  width: 100%;
-  height: 100%;
+  min-height: 100%;
+  min-width: 100%;
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url('./assets/background.jpg');
+  background-attachment: fixed;
   opacity: 0.4;
   z-index: -1;
 }

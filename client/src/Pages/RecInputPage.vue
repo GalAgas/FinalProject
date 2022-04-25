@@ -1,10 +1,12 @@
 <template>
   <div>
-    <h1> <B>Recommendation Inputs Page</B> </h1>
     <div class="formDiv">
       <b-form v-if="step1">
-        <h2> <B>Please enter patient ID & NGS csv file :</B> </h2>
-        <b-form-group>
+        <h1> <B>Bacteria Inputs Page <b-icon icon="file-earmark-medical-fill"></b-icon></B></h1>
+        <br/>
+        <br/>
+        <h2> <B>Please enter NGS csv & txt files :</B> </h2>
+        <!-- <b-form-group>
           <b-form-input
             id="input-small"
             size="lg"
@@ -15,9 +17,10 @@
           <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
             Patient ID must contain only digits
           </b-form-invalid-feedback>
-        </b-form-group>
+        </b-form-group> -->
         <b-form-group>
           <b-form-file
+          class="fileInput"
           accept=".csv"
           v-model="csvFile"
           :state="validateCSV"
@@ -30,6 +33,7 @@
         </b-form-group>
         <b-form-group>
           <b-form-file
+          class="fileInput"
           accept=".txt"
           v-model="txtFile"
           :state="validateTXT"
@@ -50,10 +54,12 @@
           </b-button>
       </b-form>
       <b-form id="inputform" v-if="!step1">
+        <h1><B>Patient Inputs Page <b-icon icon="person-lines-fill"></b-icon></B></h1>
+        <br/>
         <b-form-group>
           <b-form-input
             id="input-small"
-            size="lg"
+            size="md"
             v-model="$v.Inputs.age.$model"
             :state="validatePatientState('age')"
             placeholder="Enter Patient Age">
@@ -85,7 +91,6 @@
           Dysuria
         </b-form-checkbox>
         <div>
-
         <b-form-group label="More Drugs of Patient" label-for="tags-with-dropdown">
           <b-form-tags
             id="tags-with-dropdown"
@@ -140,7 +145,9 @@
           </b-form-tags>
         </b-form-group>
         </div>
+      </b-form>
         <b-button
+          v-if="!step1"
           id="backbtn"
           size="lg"
           pill variant="info"
@@ -149,6 +156,7 @@
           Back
         </b-button>
         <b-button
+          v-if="!step1"
           id="submitbtn"
           size="lg"
           pill variant="info"
@@ -157,7 +165,6 @@
           v-on:click="handleSubmit">
           Submit
         </b-button>
-      </b-form>
     </div>
   </div>
 </template>
@@ -173,9 +180,6 @@ export default {
   name: 'RecInputPage',
   data() {
     return {
-      form: {
-        PatientID: '',
-      },
       csvFile: null,
       txtFile: null,
       msg: '',
@@ -185,15 +189,6 @@ export default {
       csvFileName: 'Choose the require Gene Correlation file or drop it here...',
       Inputs: {
         age: '',
-        // ageOptions: [
-        //   { value: '', text: 'Select patient age' },
-        //   { value: '0-5', text: '0-5' },
-        //   { value: '6-17', text: '6-17' },
-        //   { value: '18-39', text: '18-39' },
-        //   { value: '40-59', text: '40-59' },
-        //   { value: '60-79', text: '60-79' },
-        //   { value: '80+', text: '80+' },
-        // ],
         genderSelected: '',
         genderOptions: [
           { text: 'Male', value: 'Male' },
@@ -210,12 +205,6 @@ export default {
     };
   },
   validations: {
-    form: {
-      PatientID: {
-        required,
-        numeric,
-      },
-    },
     Inputs: {
       age: {
         required,
@@ -228,10 +217,10 @@ export default {
       return this.csvFile && this.csvFile.type.endsWith('csv');
     },
     validateTXT() {
-      return this.txtFile && this.txtFile.type.startsWith('text/');
+      return this.txtFile && this.txtFile.type.endsWith('plain');
     },
     nextButtonDisabled() {
-      if (this.form.PatientID === '' || this.csvFile == null || this.txtFile == null || !this.validateTXT || !this.validateCSV || !this.validateState('PatientID')) {
+      if (this.csvFile == null || this.txtFile == null || !this.validateTXT || !this.validateCSV) {
         return true;
       }
       return false;
@@ -293,7 +282,7 @@ export default {
     },
     handleSubmit() {
       const bodyFormData = new FormData();
-      bodyFormData.append('id', this.form.PatientID);
+      // bodyFormData.append('id', this.form.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
       bodyFormData.append('gene_correlation_txt', this.txtFile);
       bodyFormData.append('patientAge', this.Inputs.age);
@@ -346,11 +335,13 @@ export default {
 
 <style>
 .formDiv{
-  width: 75%;
-  padding-top: 5%;
-  padding-left: 25%;
+  width: 80%;
+  padding-left: 20%;
 }
 
+.fileInput{
+  width: 80%;
+}
 .ml-5w-75 {
   margin-top: 3%;
   width: 20%;
@@ -361,10 +352,6 @@ export default {
 #inputform{
   width: 80%;
   padding-left: 20%;
-}
-
-#age{
-  width: 50%;
 }
 
 #backbtn{
