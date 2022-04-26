@@ -3,9 +3,10 @@ from pandas.core.indexes.base import Index
 from flask import Flask, jsonify, request, json, abort
 from flask_cors import CORS
 from MICPredictor import MICPredictor
-# from treatmentRanking import treatmentRanking
+from treatmentRanking import treatmentRanking
 from contextAware import contextAware
 import re
+from io import BytesIO
 
 
 # configuration
@@ -37,7 +38,7 @@ class WebService(object):
         # enable CORS
         CORS(self.app, resources={r'/*': {'origins': '*'}})
         self.mic_predictor = MICPredictor()
-        # self.treatment_ranking = treatmentRanking()
+        self.treatment_ranking = treatmentRanking()
         self.context_aware = contextAware()
         self.context_aware.create_db()
 
@@ -89,20 +90,21 @@ class WebService(object):
             #     return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
-            message = self.check_valid_csv(csv_file)
-            if message != '':
-                return self.response('Error in csv file! \n' + message, 400)
-            message = self.check_valid_txt(txt_file)
-            if message != '':
-                return self.response('Error in txt file! \n' + message, 400)
+            # message = self.check_valid_csv(csv_file)
+            # if message != '':
+            #     return self.response('Error in csv file! \n' + message, 400)
+            # message = self.check_valid_txt(txt_file)
+            # if message != '':
+            #     return self.response('Error in txt file! \n' + message, 400)
             
             # MIC prediction
             anti_dict = self.mic_predictor.predict(csv_file, txt_file)
+            print(anti_dict)
             # DDI update
             # anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
 
             # GFR elimination & Coverage extraction
-            anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
+            # anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
             # # check if needed here
             # self.context_aware.close_db()
             
@@ -186,7 +188,9 @@ class WebService(object):
         return message
 
     def read_txt_file(self, file):
-        return file.readlines()
+        # return file.readlines()
+        f = pd.read_csv(BytesIO(file.read()), sep=" ", header=None)
+        return f
 
     def read_csv_file(self, file):
         return pd.read_csv(file, index_col=0)
