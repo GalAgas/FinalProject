@@ -2,10 +2,11 @@ import pandas as pd
 from pandas.core.indexes.base import Index
 from flask import Flask, jsonify, request, json, abort
 from flask_cors import CORS
-from MICPredictor import MICPredictor
+from MIC.MICPredictor import MICPredictor
 from treatmentRanking import treatmentRanking
 from contextAware import contextAware
 import re
+from io import BytesIO
 
 
 # configuration
@@ -75,6 +76,8 @@ class WebService(object):
         """
         gene_correlation_csv = request.files['gene_correlation_csv']
         gene_correlation_txt = request.files['gene_correlation_txt']
+        # print(type(gene_correlation_txt))
+        # print("type(gene_correlation_txt)------------------------------")
         patient_id = request.form['id']
         patient_age = request.form['patientAge']
         patient_gender = request.form['patientGender']
@@ -88,12 +91,13 @@ class WebService(object):
                 return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
-            message = self.check_valid_csv(csv_file)
-            if message != '':
-                return self.response('Error in csv file! \n' + message, 400)
-            message = self.check_valid_txt(txt_file)
-            if message != '':
-                return self.response('Error in txt file! \n' + message, 400)
+            print(txt_file)
+            # message = self.check_valid_csv(csv_file)
+            # if message != '':
+            #     return self.response('Error in csv file! \n' + message, 400)
+            # message = self.check_valid_txt(txt_file)
+            # if message != '':
+            #     return self.response('Error in txt file! \n' + message, 400)
             
             # MIC prediction
             anti_dict = self.mic_predictor.predict(csv_file, txt_file)
@@ -187,11 +191,16 @@ class WebService(object):
         return message
 
     def read_txt_file(self, file):
-        return file.readlines()
+        # return file.readlines()
+        # print("type(file):", type(file))
+        # print("type(file.read()):", type(file.read()))
+        f = pd.read_csv(BytesIO(file.read()), sep=" ", header=None)
+        print("f:", f.head())
+        # print("type(f):", type(f))
+        return f
 
     def read_csv_file(self, file):
         return pd.read_csv(file, index_col=0)
-
 
 # open the server class. add endpoint and start running the server.
 web_service_app = WebService('webservice')
