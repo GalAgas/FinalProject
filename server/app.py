@@ -77,7 +77,6 @@ class WebService(object):
         """
         gene_correlation_csv = request.files['gene_correlation_csv']
         gene_correlation_txt = request.files['gene_correlation_txt']
-        # patient_id = request.form['id']
         patient_age = int(request.form['patientAge'])
         patient_isFemale = request.form['patientGender'] == 'Female'
         patient_creatinine = float(request.form['patientCreatinine'])
@@ -90,23 +89,22 @@ class WebService(object):
             #     return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
-            # message = self.check_valid_csv(csv_file)
-            # if message != '':
-            #     return self.response('Error in csv file! \n' + message, 400)
-            # message = self.check_valid_txt(txt_file)
-            # if message != '':
-            #     return self.response('Error in txt file! \n' + message, 400)
+            message = self.check_valid_csv(csv_file)
+            if message != '':
+                return self.response('Error in csv file! \n' + message, 400)
+            message = self.check_valid_txt(txt_file)
+            if message != '':
+                return self.response('Error in txt file! \n' + message, 400)
             
             # MIC prediction
             anti_dict = self.mic_predictor.predict(csv_file, txt_file)
-            print(anti_dict)
             # DDI update
             # anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
 
             # GFR elimination & Coverage extraction
-            # anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
+            anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
             # # check if needed here
-            # self.context_aware.close_db()
+            self.context_aware.close_db()
             
             # anti_dict = self.sort(anti_dict)
             
@@ -114,10 +112,6 @@ class WebService(object):
         except Exception as e:
             print(e)
             return self.response("Something went worng!", 400)
-
-    # def check_valid_id(self, patient_id):
-    #     # check in future public patients DB that patient id exists.
-    #     return True
 
     def check_valid_txt(self, gene_correlation_txt):
         """
@@ -127,10 +121,10 @@ class WebService(object):
         """
         message = ''
         float_regex = '[0-9]+\.[0-9]+'
-        for i, row in enumerate(gene_correlation_txt):
-            # remove '\n' and convert from bytes to string
-            row = row[:-1].decode("utf-8")
-            row_tokens = row.split(" ")
+        for i, row in gene_correlation_txt.iterrows():
+            row_tokens = []
+            for val in row[:3]:
+                row_tokens.append(val)
             if not row_tokens[0].startswith(">contig"):
                 message = f'line {i+1} , column 1 starts with invalid value'
                 break
@@ -153,6 +147,8 @@ class WebService(object):
                             "end": int, "depth": float, "seqid": float, "seqcov": float,
                             "match_start": int, "match_end": int, "ref_gene_size": int}
 
+        # save original column names
+        original_columns_names = gene_correlation_csv.columns
         # rename columns name to lower case
         gene_correlation_csv.columns = gene_correlation_csv.columns.str.lower()
         # check if all the required columns exists
@@ -185,6 +181,7 @@ class WebService(object):
                 if col_name == "seqid" or col_name == "seqcov":
                     if not all(0 <= val <= 100 for val in gene_correlation_csv[col_name]):
                         message = f'column {col_name} have invalid value'
+        gene_correlation_csv.columns = original_columns_names
         return message
 
     def read_txt_file(self, file):
