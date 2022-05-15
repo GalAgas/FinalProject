@@ -6,18 +6,6 @@
         <br/>
         <br/>
         <h2> <B>Please enter NGS csv & txt files :</B> </h2>
-        <!-- <b-form-group>
-          <b-form-input
-            id="input-small"
-            size="lg"
-            v-model="$v.form.PatientID.$model"
-            :state="validateState('PatientID')"
-            placeholder="Enter Patient ID">
-          </b-form-input>
-          <b-form-invalid-feedback v-if="!$v.form.PatientID.integer">
-            Patient ID must contain only digits
-          </b-form-invalid-feedback>
-        </b-form-group> -->
         <b-form-group>
           <b-form-file
           class="fileInput"
@@ -65,11 +53,19 @@
             placeholder="Enter Patient Age">
           </b-form-input>
         </b-form-group>
-          <b-form-radio-group
-            v-model="Inputs.genderSelected"
-            :options="Inputs.genderOptions"
-            name="Gender"
-          ></b-form-radio-group>
+        <b-form-radio-group
+          v-model="Inputs.genderSelected"
+          :options="Inputs.genderOptions"
+          name="Gender"
+        ></b-form-radio-group>
+        <b-form-checkbox
+          v-if="Inputs.genderSelected==='Female'"
+          v-model="Inputs.pregnancy"
+          value="pregnant"
+          unchecked-value="not pregnant"
+        >
+          pregnancy
+        </b-form-checkbox>
         <div class="mt-2">Creatinine Level: {{ Inputs.creatinine }}</div>
         <b-form-input
           v-model="Inputs.creatinine"
@@ -194,6 +190,7 @@ export default {
           { text: 'Male', value: 'Male' },
           { text: 'Female', value: 'Female' },
         ],
+        pregnancy: 'not pregnant',
         drugsOptions: ['Abilify', 'Ativan', 'Advil', 'C', 'CB'],
         drugsSearch: '',
         creatinine: '1.5',
@@ -287,6 +284,7 @@ export default {
       bodyFormData.append('gene_correlation_txt', this.txtFile);
       bodyFormData.append('patientAge', this.Inputs.age);
       bodyFormData.append('patientGender', this.Inputs.genderSelected);
+      bodyFormData.append('pregnancy', this.Inputs.pregnancy);
       bodyFormData.append('patientCreatinine', this.Inputs.creatinine);
       bodyFormData.append('patientFever', this.Inputs.fever);
       bodyFormData.append('patientFlankPain', this.Inputs.flankPain);
