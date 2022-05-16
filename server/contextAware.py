@@ -26,15 +26,17 @@ class contextAware:
         # after MIC completed, we can change this function to select from db only the relevent antibiotics.
         antibiotics = self.db.get_all_antibiotics()
         for ab in antibiotics:
-            if ab[3] != -1 and ab[3] < GFR:
+            if ab[3] != -1 and ab[3] < GFR and ab[1] in anti_dict:
                 del anti_dict[ab[1]]
             if ab[1] in anti_dict:
-                anti_dict[ab[1]].append(ab[2])
+                if ab[2] == 'Broad':
+                    res = 1
+                elif ab[2] == 'Narrow':
+                    res = 0
+                anti_dict[ab[1]].append(res)
         self.db.close_connection()
 
-        final_dict = self.convert_to_list_of_dicts(anti_dict)
-
-        return final_dict
+        return anti_dict
 
     def calculate_GFR(self, serum_cr, age, female):
         res = 175 * (serum_cr**(-1.154)) * (age**(-0.203))
@@ -45,8 +47,3 @@ class contextAware:
     def get_coverage(self, drugs_dict):
         pass
 
-    def convert_to_list_of_dicts(self, anti_dict):
-        df = pd.DataFrame.from_dict(anti_dict, columns=[
-            'Drug_Name', 'MIC', 'MIC_Confidence', 'Comments', 'Rank', 'Coverage'], orient='index')
-        final_dict = df.to_dict(orient='records')
-        return final_dict

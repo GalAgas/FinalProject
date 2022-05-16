@@ -6,7 +6,9 @@ import numpy as np
 from autoxgb.cli.predict import PredictAutoXGBCommand
 from gps_lib.parse_raw_utils import get_isolate_features, get_isolate_features_from_site
 
-MODELS_DIR = 'server\models'
+# MODELS_DIR = '\server\models'
+MODELS_DIR = r'C:/Guy/University/Project/FinalProject/server/models'
+# MODELS_DIR = 'C:\Guy\University\Project\FinalProject\server\models'
 SAMPLE_PATH_DIR = 'server\mic_files'
 
 '''

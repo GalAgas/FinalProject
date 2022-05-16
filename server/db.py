@@ -1,5 +1,6 @@
 import sqlite3
 from pathlib import Path
+from ddi import SeleniumSearch
 
 class Database:
     """
@@ -53,6 +54,11 @@ class Database:
         sql_query = '''SELECT * FROM Antibiotics'''
         res = self.select_from_db(sql_query)
         return res
+    
+    def get_all_DDI(self):
+        sql_query = '''SELECT * FROM DDI'''
+        res = self.select_from_db(sql_query)
+        return res
 
     def insert_or_update_to_db(self, sql_query, *params):
         """
@@ -64,40 +70,43 @@ class Database:
         self.cur.execute(sql_query, params)
 
     def create_table_func(self):
-        sql_query = '''CREATE TABLE Antibiotics(
+        anti_query = '''CREATE TABLE Antibiotics(
             ID INTEGER PRIMARY KEY,
             Name VARCHAR(100) Unique Not Null,
             Coverage VARCHAR(20),
             CrclThreshold INTEGER
             );'''
-        self.cur.execute(sql_query)
+            
+        ddi_query = '''CREATE TABLE DDI(
+            ID INTEGER PRIMARY KEY,
+            Antibiotic VARCHAR(100) Not Null,
+            Drug VARCHAR(100) Not Null,
+            Major INTEGER Not Null,
+            Moderate INTEGER Not Null,
+            Minor INTEGER Not Null
+            );'''
+            
+        self.cur.execute(anti_query)
+        self.commit()
+        self.cur.execute(ddi_query)
         self.commit()
         
     def build_db(self):
         self.create_table_func()
         antibiotics = {
-            "Amikacin": ['Narrow', -1],
-            "Ampicillin": ['Narrow', -1],
-            "Ampicillin-sulbactam": ['Broad', -1],
-            "Aztreonam": ['Narrow', -1],
-            "Cefazolin": ['Narrow', -1],
-            "Cefepime": ['Broad', -1],
-            "Ceftaxime": ['Broad', -1],
-            "Ceftazidime": ['Narrow', -1],
-            "Ceftriaxone": ['Broad', -1],
-            "Ciprofloxacin": ['Broad', -1],
-            "Colistin": ['Narrow', -1],
-            "Doripenem": ['Broad', -1],
-            "Gentamicin": ['Narrow', 30],
-            "Levofloxacin": ['Broad', -1],
-            "Meropenem": ['Broad', -1],
-            "Minocyclin": ['Broad', -1],
-            "Moxifloxacin": ['Broad', -1],
-            "Nitrofurantoin": ['Narrow', -1],
-            "Pipracillin-tazobactam": ['Broad', -1],
-            "Tetracycline": ['Broad', -1],
-            "Tobramycin": ['Narrow', 30],
-            "TMP-SMX": ['Broad', -1],
+            "ampicillin_sulbactam": ['Broad', -1],
+            "ceftazidime": ['Narrow', -1],
+            "ceftriaxone": ['Broad', -1],
+            "ciprofloxacin": ['Broad', -1],
+            # dummy
+            'imipenem': ['Broad', -1],
+            
+            "gentamicin": ['Narrow', 30],
+            "levofloxacin": ['Broad', -1],
+            "tetracycline": ['Broad', -1],
+            "tobramycin": ['Narrow', 30],
+            # dummy
+            "trimethoprim_sulfamethoxazole": ['Broad', -1]
         }
         sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold)
         VALUES (?,?,?)
@@ -106,5 +115,41 @@ class Database:
             ab_val = antibiotics[ab]
             self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1])
         self.commit()
+        
+        antis = {'ampicillin/sulbactam': 8.075956064060623,
+                 'ceftazidime': 28.3055452527993,
+                 'ceftriaxone': 74.47627086024058,
+                 'ciprofloxacin': 28.601612769130078,
+                 'gentamicin': 50.41656050093703,
+                 'cilastatin/imipenem': 9.610354409383595,
+                 'levofloxacin': 8.160683683234287,
+                 'tetracycline': 27.058867558883055,
+                 'tobramycin': 471.92336817920074,
+                 'sulfamethoxazole/trimethoprim': 353.4524013677756
+                 }
+        
+        change = {'ampicillin/sulbactam': 'ampicillin_sulbactam',
+                  'cilastatin/imipenem': 'imipenem',
+                  'sulfamethoxazole/trimethoprim': 'trimethoprim_sulfamethoxazole'
+                  }
+        
+        prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
+
+        sel = SeleniumSearch()
+        interactions = sel.search_drugs(antibiotics=antis, prev_drugs=prev)
+        
+        for anti, drug in interactions.copy():
+            if anti in change:
+                interactions[(change[anti], drug)] = interactions.pop((anti, drug))
+        
+        sql_query = '''INSERT INTO DDI(Antibiotic,Drug,Major,Moderate,Minor)
+        VALUES (?,?,?,?,?)
+        '''
+        for inter in interactions:
+            major, moderate, minor = interactions[inter]
+            self.insert_or_update_to_db(sql_query, inter[0], inter[1], major, moderate, minor)
+        self.commit()
+        
+        
 
 

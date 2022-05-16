@@ -1,3 +1,4 @@
+from typing import List
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -20,7 +21,7 @@ class SeleniumSearch:
         self.options.add_argument('--disable-extensions')
         # self.options.add_argument('--headless')
 
-    def search_drugs(self, antibiotics, prev_drugs):
+    def search_drugs(self, antibiotics:dict, prev_drugs:List)->dict:
         driver = webdriver.Chrome(self.webdriver, options=self.options)
         driver.maximize_window()
 
@@ -78,23 +79,23 @@ class SeleniumSearch:
                     or  anti.lower() in options[1].lower() and prev_d.lower() in options[0].lower():
                         span = web_elem.find_element(By.TAG_NAME, value="span")
                         # print(span.text)
-                        new_val = interactions.get(anti,[0,0,0])
+                        new_val = interactions.get((anti,prev_d),[0,0,0])
                         if span.text == 'Minor':
                             new_val[2] += 1
                         elif span.text == 'Moderate':
                             new_val[1] += 1
                         elif span.text == 'Major':
                             new_val[0] += 1
-                        interactions[anti] = new_val
+                        interactions[(anti,prev_d)] = new_val
                         
         for anti in antibiotics:
-            if anti not in interactions:
-                interactions[anti] = [0,0,0]
+            for prev_d in prev_drugs:
+                if (anti,prev_d) not in interactions:
+                    interactions[(anti,prev_d)] = [0,0,0]
 
         driver.close()
         return interactions
-        
-    
+         
     def register(self, driver):
         
         NEXT_BUTTON_XPATH = '//*[@id="header"]/div/div/div/nav[2]/a[2]'
