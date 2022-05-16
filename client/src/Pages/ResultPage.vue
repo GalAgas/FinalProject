@@ -60,8 +60,10 @@ export default {
         { key: 'Drug_Name', visable: true },
         { key: 'MIC', visable: true },
         { key: 'MIC_Confidence', visable: true },
-        { key: 'Coverage', visable: false },
-        { key: 'Comments', visable: true }],
+        { key: 'Major_DDI', visable: false },
+        { key: 'Moderate_DDI', visable: false },
+        { key: 'Minor_DDI', visable: false },
+        { key: 'Coverage', visable: false }],
       expend_button_text: 'Expend View',
     };
   },
@@ -84,7 +86,12 @@ export default {
       return true;
     },
     changeFields() {
-      const keysToChange = { Coverage: 4 };
+      const keysToChange = {
+        Major_DDI: 4,
+        Moderate_DDI: 5,
+        Minor_DDI: 6,
+        Coverage: 7,
+      };
       Object.keys(keysToChange).forEach((field) => {
         if (this.fields[keysToChange[field]].visable) {
           this.fields[keysToChange[field]].visable = false;
