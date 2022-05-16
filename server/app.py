@@ -105,19 +105,19 @@ class WebService(object):
             # GFR elimination & Coverage extraction
             anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)        
 
-            anti_dict = self.sort_dict(anti_dict)
+            # anti_dict = self.sort_dict(anti_dict)
             
-            anti_dict = self.convert_dict(anti_dict)
+            # anti_dict = self.convert_dict(anti_dict)
             
             anti_dict = [
-                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.075956064060623, 'MIC_Confidence': 0.828, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1},
-                            {'Drug_Name': 'levofloxacin', 'MIC': 8.160683683234287, 'MIC_Confidence': 0.81, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 0, 'Coverage': 1},
-                            {'Drug_Name': 'imipenem', 'MIC': 9.610354409383595, 'MIC_Confidence': 0.992, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1},
-                            {'Drug_Name': 'tetracycline', 'MIC': 27.058867558883055, 'MIC_Confidence': 0.735, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 1}, 
-                            {'Drug_Name': 'ceftazidime', 'MIC': 28.3055452527993, 'MIC_Confidence': 0.842, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 0},
-                            {'Drug_Name': 'ciprofloxacin', 'MIC': 28.601612769130078, 'MIC_Confidence': 0.916, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 1, 'Coverage': 1}, 
-                            {'Drug_Name': 'ceftriaxone', 'MIC': 74.47627086024058, 'MIC_Confidence': 0.829, 'Major_DDI': 0, 'Moderate_DDI':1, 'Minor_DDI': 0, 'Coverage': 1}, 
-                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.4524013677756, 'MIC_Confidence': 0.887, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1}
+                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.075956064060623, 'MIC_Confidence': 0.828, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'levofloxacin', 'MIC': 8.160683683234287, 'MIC_Confidence': 0.81, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 0, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'imipenem', 'MIC': 9.610354409383595, 'MIC_Confidence': 0.992, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'tetracycline', 'MIC': 27.058867558883055, 'MIC_Confidence': 0.735, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'ceftazidime', 'MIC': 28.3055452527993, 'MIC_Confidence': 0.842, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Narrow'},
+                            {'Drug_Name': 'ciprofloxacin', 'MIC': 28.601612769130078, 'MIC_Confidence': 0.916, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 1, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'ceftriaxone', 'MIC': 74.47627086024058, 'MIC_Confidence': 0.829, 'Major_DDI': 0, 'Moderate_DDI':1, 'Minor_DDI': 0, 'Coverage': 'Broad'},
+                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.4524013677756, 'MIC_Confidence': 0.887, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'}
                         ]
             
             return jsonify(anti_dict)
@@ -142,6 +142,11 @@ class WebService(object):
             'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage'], orient='index')
         final_dict = df.to_dict(orient='records')
 
+        for d in final_dict:
+            if d['Coverage'] == 0:
+                d['Coverage'] = 'Narrow'
+            else:
+                d['Coverage'] = 'Broad'
         return final_dict
 
     def check_valid_txt(self, gene_correlation_txt):
