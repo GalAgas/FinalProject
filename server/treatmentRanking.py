@@ -3,7 +3,9 @@ from collections import defaultdict
 import pandas as pd
 
 
+######################## fake #########################
 class treatmentRanking:
+
     def __init__(self):
         pass
         # self.selsearch = SeleniumSearch()
@@ -27,10 +29,7 @@ class treatmentRanking:
             r.extend(a[1:])
             anti_dict[a[0]] = r
         
-        
-        
-        # mic_updated = self.selsearch.search_drugs(anti_dict, drugs_in_use)
-        
+        return anti_dict
         
         # false return
         # dict_initial_ranking = {
@@ -48,12 +47,3 @@ class treatmentRanking:
         # df = pd.DataFrame.from_dict(dict_initial_ranking, columns=[
         #                             'Drug Name', 'MIC', 'MIC_Confidence', 'Comments', 'Rank'], orient='index')
         # df.sort_values(by='Rank', inplace=True, ascending=False)
-        return anti_dict
-
-if __name__ == "__main__":
-    # s = ['df','sd','aaaaa']
-    s = ['df']
-    t_drug = tuple(s)
-    if len(t_drug) == 1:
-        s_drug = str(t_drug).replace(',', '')
-    print(s_drug)
