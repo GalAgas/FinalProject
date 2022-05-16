@@ -1,21 +1,35 @@
 from collections import defaultdict
-from ddi import SeleniumSearch
+# from ddi import SeleniumSearch
 import pandas as pd
 
 
 class treatmentRanking:
     def __init__(self):
-        self.selsearch = SeleniumSearch()
+        pass
+        # self.selsearch = SeleniumSearch()
 
-    def update(self, anti_dict, drugs_in_use):
+    def update(self, anti_dict, drugs_in_use, db):
         """
         create initial rank to treatments based on MIC values
         future implement - will consider drugs traits and chemoinformatics.
         :param mic: all MIC values based on system inputs, dataframe
         :return dataframe of possible treatments
         """
+        # s_drug = str(tuple(drugs_in_use)) if len(drugs_in_use) > 1 else str(tuple(drugs_in_use)).replace(',', '')
+        d = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
+        s_drug = str(tuple(d))
+        q = '''SELECT Antibiotic, SUM(Major), SUM(Moderate), SUM(Minor) FROM DDI
+            WHERE Drug in ''' + s_drug + '''GROUP BY Antibiotic'''
+        res = db.select_from_db(q)
         
-        mic_updated = self.selsearch.search_drugs(anti_dict, drugs_in_use)
+        for a in res:
+            r = [anti_dict[a[0]]]
+            r.extend(a[1:])
+            anti_dict[a[0]] = r
+        
+        
+        
+        # mic_updated = self.selsearch.search_drugs(anti_dict, drugs_in_use)
         
         
         # false return
@@ -34,4 +48,12 @@ class treatmentRanking:
         # df = pd.DataFrame.from_dict(dict_initial_ranking, columns=[
         #                             'Drug Name', 'MIC', 'MIC_Confidence', 'Comments', 'Rank'], orient='index')
         # df.sort_values(by='Rank', inplace=True, ascending=False)
-        return mic_updated
+        return anti_dict
+
+if __name__ == "__main__":
+    # s = ['df','sd','aaaaa']
+    s = ['df']
+    t_drug = tuple(s)
+    if len(t_drug) == 1:
+        s_drug = str(t_drug).replace(',', '')
+    print(s_drug)

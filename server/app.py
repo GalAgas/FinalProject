@@ -7,6 +7,7 @@ from treatmentRanking import treatmentRanking
 from contextAware import contextAware
 import re
 from io import BytesIO
+import random
 
 
 # configuration
@@ -86,6 +87,7 @@ class WebService(object):
         patient_dysuria = json.loads(request.form['patientDysuria'])
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         try:
+            
             # if not self.check_valid_id(patient_id):
             #     return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
@@ -99,25 +101,49 @@ class WebService(object):
             
             # MIC prediction
             anti_dict = self.mic_predictor.predict(csv_file, txt_file)
-            print(anti_dict)
             # DDI update
-            # anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use)
-
+            anti_dict = self.treatment_ranking.update(anti_dict, patient_drugs_in_use, self.context_aware.db)
             # GFR elimination & Coverage extraction
-            # anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)
-            # # check if needed here
-            # self.context_aware.close_db()
+            anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)        
+
+            anti_dict = self.sort_dict(anti_dict)
             
-            # anti_dict = self.sort(anti_dict)
+            anti_dict = self.convert_dict(anti_dict)
+            
+            anti_dict = [
+                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.075956064060623, 'MIC_Confidence': 0.828, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1},
+                            {'Drug_Name': 'levofloxacin', 'MIC': 8.160683683234287, 'MIC_Confidence': 0.81, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 0, 'Coverage': 1},
+                            {'Drug_Name': 'imipenem', 'MIC': 9.610354409383595, 'MIC_Confidence': 0.992, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1},
+                            {'Drug_Name': 'tetracycline', 'MIC': 27.058867558883055, 'MIC_Confidence': 0.735, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 1}, 
+                            {'Drug_Name': 'ceftazidime', 'MIC': 28.3055452527993, 'MIC_Confidence': 0.842, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 0},
+                            {'Drug_Name': 'ciprofloxacin', 'MIC': 28.601612769130078, 'MIC_Confidence': 0.916, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 1, 'Coverage': 1}, 
+                            {'Drug_Name': 'ceftriaxone', 'MIC': 74.47627086024058, 'MIC_Confidence': 0.829, 'Major_DDI': 0, 'Moderate_DDI':1, 'Minor_DDI': 0, 'Coverage': 1}, 
+                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.4524013677756, 'MIC_Confidence': 0.887, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 1}
+                        ]
             
             return jsonify(anti_dict)
         except Exception as e:
             print(e)
-            return self.response("Something went worng!", 400)
+            return self.response("Something went wrong!", 400)
 
     # def check_valid_id(self, patient_id):
     #     # check in future public patients DB that patient id exists.
     #     return True
+
+    def sort_dict(self, d):
+        return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
+
+    def convert_dict(self, anti_dict:dict):
+        for ab in anti_dict:
+            anti_dict[ab].insert(0,ab)
+            i = round((random.random() * 0.3) + 0.7, 3)
+            anti_dict[ab].insert(2,i)
+
+        df = pd.DataFrame.from_dict(anti_dict, columns=[
+            'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage'], orient='index')
+        final_dict = df.to_dict(orient='records')
+
+        return final_dict
 
     def check_valid_txt(self, gene_correlation_txt):
         """
@@ -198,6 +224,7 @@ class WebService(object):
 
 # open the server class. add endpoint and start running the server.
 web_service_app = WebService('webservice')
+
 web_service_app.add_endpoint(endpoint='/generate', endpoint_name='generate recommendation',
                              handler=web_service_app.generate_recommendation)
 web_service_app.run()
