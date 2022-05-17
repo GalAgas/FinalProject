@@ -1,6 +1,6 @@
 import sqlite3
 from pathlib import Path
-from ddi import SeleniumSearch
+# from ddi import SeleniumSearch
 
 class Database:
     """
@@ -94,26 +94,26 @@ class Database:
     def build_db(self):
         self.create_table_func()
         antibiotics = {
-            "ampicillin_sulbactam": ['Broad', -1],
-            "ceftazidime": ['Narrow', -1],
-            "ceftriaxone": ['Broad', -1],
-            "ciprofloxacin": ['Broad', -1],
+            "ampicillin_sulbactam": ['Broad', -1, 'B'],
+            "ceftazidime": ['Narrow', -1, 'B'],
+            "ceftriaxone": ['Broad', -1, 'B'],
+            "ciprofloxacin": ['Broad', -1, 'C'],
             # dummy
-            'imipenem': ['Broad', -1],
+            'imipenem': ['Broad', -1, None],
             
-            "gentamicin": ['Narrow', 30],
-            "levofloxacin": ['Broad', -1],
-            "tetracycline": ['Broad', -1],
-            "tobramycin": ['Narrow', 30],
+            "gentamicin": ['Narrow', 30, 'D'],
+            "levofloxacin": ['Broad', -1, 'C'],
+            "tetracycline": ['Broad', -1, 'D'],
+            "tobramycin": ['Narrow', 30, None],
             # dummy
-            "trimethoprim_sulfamethoxazole": ['Broad', -1]
+            "trimethoprim_sulfamethoxazole": ['Broad', -1, None]
         }
-        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold)
-        VALUES (?,?,?)
+        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold, Pregnancy)
+        VALUES (?,?,?,?)
         '''
         for ab in antibiotics:
             ab_val = antibiotics[ab]
-            self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1])
+            self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1], ab_val[2])
         self.commit()
         
         antis = {'ampicillin/sulbactam': 8.075956064060623,
@@ -135,8 +135,8 @@ class Database:
         
         prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
 
-        sel = SeleniumSearch()
-        interactions = sel.search_drugs(antibiotics=antis, prev_drugs=prev)
+        # sel = SeleniumSearch()
+        # interactions = sel.search_drugs(antibiotics=antis, prev_drugs=prev)
         
         for anti, drug in interactions.copy():
             if anti in change:
