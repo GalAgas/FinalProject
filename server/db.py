@@ -94,26 +94,26 @@ class Database:
     def build_db(self):
         self.create_table_func()
         antibiotics = {
-            "ampicillin_sulbactam": ['Broad', -1],
-            "ceftazidime": ['Narrow', -1],
-            "ceftriaxone": ['Broad', -1],
-            "ciprofloxacin": ['Broad', -1],
+            "ampicillin_sulbactam": ['Broad', -1, 'B'],
+            "ceftazidime": ['Narrow', -1, 'B'],
+            "ceftriaxone": ['Broad', -1, 'B'],
+            "ciprofloxacin": ['Broad', -1, 'C'],
             # dummy
             'imipenem': ['Broad', -1],
             
-            "gentamicin": ['Narrow', 30],
+            "gentamicin": ['Narrow', 30, 'D'],
             "levofloxacin": ['Broad', -1],
-            "tetracycline": ['Broad', -1],
+            "tetracycline": ['Broad', -1, 'D'],
             "tobramycin": ['Narrow', 30],
             # dummy
             "trimethoprim_sulfamethoxazole": ['Broad', -1]
         }
-        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold)
-        VALUES (?,?,?)
+        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold,pregnant)
+        VALUES (?,?,?,?)
         '''
         for ab in antibiotics:
             ab_val = antibiotics[ab]
-            self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1])
+            self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1], ab_val[2])
         self.commit()
         
         antis = {'ampicillin/sulbactam': 8.075956064060623,
