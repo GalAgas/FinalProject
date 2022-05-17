@@ -80,6 +80,11 @@ class WebService(object):
         gene_correlation_txt = request.files['gene_correlation_txt']
         patient_age = int(request.form['patientAge'])
         patient_isFemale = request.form['patientGender'] == 'Female'
+        if patient_isFemale:
+            patient_pregnant = request.form['pregnancy'] == 'pregnant'
+        else:
+            patient_pregnant = False
+
         patient_creatinine = float(request.form['patientCreatinine'])
         patient_fever = json.loads(request.form['patientFever'])
         patient_plank_pain = json.loads(request.form['patientFlankPain'])
@@ -124,10 +129,6 @@ class WebService(object):
         except Exception as e:
             print(e)
             return self.response("Something went wrong!", 400)
-
-    # def check_valid_id(self, patient_id):
-    #     # check in future public patients DB that patient id exists.
-    #     return True
 
     def sort_dict(self, d):
         return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
