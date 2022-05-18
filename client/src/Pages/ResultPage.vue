@@ -10,8 +10,13 @@
           <template #cell(index)="data">
             {{ data.index + 1 }}
           </template>
-          <template #cell(Drug_Name)="data">
+          <!-- <template #cell(Drug_Name)="data">
             <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">{{ data.item.Drug_Name }}</a>
+          </template> -->
+          <template #cell(Drug_Name)="data">
+            <a id="linkToPopUp" @click="showPopUp(data.item.Drug_Name)">
+            {{ data.item.Drug_Name }}
+            </a>
           </template>
         </b-table>
     </div>
@@ -20,14 +25,6 @@
         <b-icon icon="info-circle-fill" scale="2">
       </b-icon></b></h4>
     </div>
-    <b-button
-      id="expandBtn"
-      size="lg"
-      pill variant="info"
-      class="ml-5w-75"
-      v-on:click="changeFields">
-      {{ expend_button_text }}
-    </b-button>
     <br/>
     <br/>
 
@@ -54,7 +51,10 @@ export default {
   name: 'ResultsPage',
   data() {
     return {
+      popUp: '',
       res: null,
+      pregnant: null,
+      female: '',
       confidenceFilter: '',
       fields: [{ key: 'index', visable: true },
         { key: 'Drug_Name', visable: true },
@@ -63,12 +63,14 @@ export default {
         { key: 'Major_DDI', visable: false },
         { key: 'Moderate_DDI', visable: false },
         { key: 'Minor_DDI', visable: false },
-        { key: 'Coverage', visable: false }],
-      expend_button_text: 'Expend View',
+        { key: 'Coverage', visable: false },
+        { key: 'Pregnancy_Category', visable: false }],
     };
   },
   created() {
     this.res = this.$route.params.res;
+    this.pregnant = this.$route.params.pregnant;
+    this.female = this.$route.params.female === 'Female';
   },
   computed: {
     visibleFields() {
@@ -85,22 +87,58 @@ export default {
       }
       return true;
     },
-    changeFields() {
-      const keysToChange = {
+    showPopUp(data) {
+      const keysToshow = {
         Major_DDI: 4,
         Moderate_DDI: 5,
         Minor_DDI: 6,
         Coverage: 7,
       };
-      Object.keys(keysToChange).forEach((field) => {
-        if (this.fields[keysToChange[field]].visable) {
-          this.fields[keysToChange[field]].visable = false;
-          this.expend_button_text = 'Expend View';
-        } else {
-          this.fields[keysToChange[field]].visable = true;
-          this.expend_button_text = 'Hidden View';
+      this.popUp = '';
+      let msg = '';
+      Object.keys(this.res).forEach((idx) => {
+        if (data === this.res[idx].Drug_Name) {
+          Object.keys(keysToshow).forEach((field) => {
+            msg = `${msg}${field}: ${this.res[idx][field]}\n`;
+          });
+          if (this.female && this.pregnant === 'pregnant') {
+            msg += `Pregnancy Category: ${this.res[idx].Pregnancy_Category}`;
+          }
         }
       });
+      const h = this.$createElement;
+      // const messageVNode = h('div', { class: ['foobar'] }, [
+      //   h('p', { class: ['text-center'] }, [
+      //     'click',
+      //     h('a', { href: [`https://www.drugs.com/search.php?searchterm=${data}`], target: '_blank' }, [
+      //       ' here',
+      //     ]),
+      //     ' to drugs.com',
+      //   ]),
+      const vnode = h('a', { href: [`https://www.drugs.com/search.php?searchterm=${data}`], target: '_blank' });
+      vnode.text = 'here';
+      // const a = this.$createElement('a');
+      // a.href = `https://www.drugs.com/search.php?searchterm=${data}`;
+      // a.target = '_blank';
+      // a.innerText = 'click me';
+      console.log(vnode);
+      // msg += a.innerText;
+      this.$bvModal.msgBoxOk([msg], {
+        id: 'pop',
+        title: `${data} information`,
+        size: 'md',
+        buttonSize: 'sm',
+        okVariant: 'info',
+        headerClass: 'p-2 border-bottom-0',
+        footerClass: 'p-2 border-top-0',
+        centered: true,
+      })
+        .then((value) => {
+          this.popUp = value;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
@@ -114,5 +152,11 @@ export default {
 }
 #confibox{
   width: 40%;
+}
+#linkToPopUp {
+    cursor: pointer;
+}
+#pop {
+  white-space: pre;
 }
 </style>

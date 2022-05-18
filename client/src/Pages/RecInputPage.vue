@@ -297,7 +297,7 @@ export default {
       axios.post(path, bodyFormData, config)
         .then((res) => {
           this.msg = res.data;
-          this.$router.push({ name: 'ResultPage', params: { res: res.data } });
+          this.$router.push({ name: 'ResultPage', params: { res: res.data, pregnant: this.Inputs.pregnancy, female: this.Inputs.genderSelected } });
         })
         .catch((error) => {
           // eslint-disable-next-line
