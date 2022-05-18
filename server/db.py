@@ -74,7 +74,8 @@ class Database:
             ID INTEGER PRIMARY KEY,
             Name VARCHAR(100) Unique Not Null,
             Coverage VARCHAR(20),
-            CrclThreshold INTEGER
+            CrclThreshold INTEGER,
+            pregnancyCategory VARCHAR(20)
             );'''
             
         ddi_query = '''CREATE TABLE DDI(
@@ -98,17 +99,23 @@ class Database:
             "ceftazidime": ['Narrow', -1, 'B'],
             "ceftriaxone": ['Broad', -1, 'B'],
             "ciprofloxacin": ['Broad', -1, 'C'],
-            # dummy
-            'imipenem': ['Broad', -1],
+            # check pregnancy category
+            'imipenem': ['Broad', -1, 'B'],
             
             "gentamicin": ['Narrow', 30, 'D'],
-            "levofloxacin": ['Broad', -1],
+            
+            # check pregnancy category
+            "levofloxacin": ['Broad', -1, 'C'],
+            
             "tetracycline": ['Broad', -1, 'D'],
-            "tobramycin": ['Narrow', 30],
-            # dummy
-            "trimethoprim_sulfamethoxazole": ['Broad', -1]
+            
+            # check pregnancy category
+            "tobramycin": ['Narrow', 30, 'D'],
+            
+            # check pregnancy category
+            "trimethoprim_sulfamethoxazole": ['Narrow', -1, 'C']
         }
-        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold,pregnant)
+        sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold,pregnancyCategory)
         VALUES (?,?,?,?)
         '''
         for ab in antibiotics:
@@ -116,24 +123,29 @@ class Database:
             self.insert_or_update_to_db(sql_query, ab, ab_val[0], ab_val[1], ab_val[2])
         self.commit()
         
-        antis = {'ampicillin/sulbactam': 8.075956064060623,
-                 'ceftazidime': 28.3055452527993,
-                 'ceftriaxone': 74.47627086024058,
-                 'ciprofloxacin': 28.601612769130078,
-                 'gentamicin': 50.41656050093703,
-                 'cilastatin/imipenem': 9.610354409383595,
-                 'levofloxacin': 8.160683683234287,
-                 'tetracycline': 27.058867558883055,
-                 'tobramycin': 471.92336817920074,
-                 'sulfamethoxazole/trimethoprim': 353.4524013677756
-                 }
+        antis = ['ampicillin/sulbactam',
+                 'ceftazidime',
+                 'ceftriaxone',
+                 'ciprofloxacin',
+                 'gentamicin',
+                 'cilastatin/imipenem',
+                 'levofloxacin',
+                 'tetracycline',
+                 'tobramycin',
+                 'sulfamethoxazole/trimethoprim',
+                 ]
         
         change = {'ampicillin/sulbactam': 'ampicillin_sulbactam',
                   'cilastatin/imipenem': 'imipenem',
                   'sulfamethoxazole/trimethoprim': 'trimethoprim_sulfamethoxazole'
                   }
         
-        prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
+        p1 = set(['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin'])
+        p2 = set(open("server\interactions drugs texts\interacted.txt","r").read().splitlines())
+        p3 = set(open("server\interactions drugs texts\common_drugs.txt","r").read().splitlines())
+        prev = list(p1.union(p2).union(p3))
+        
+        # prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
 
         sel = SeleniumSearch()
         interactions = sel.search_drugs(antibiotics=antis, prev_drugs=prev)

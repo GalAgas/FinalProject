@@ -38,7 +38,7 @@ class SeleniumSearch:
 
         primary_search = driver.find_element(by=By.ID, value="livesearch-interaction-basic")
         first_drug = prev_drugs[0]
-        l = (17 + 8 + 8) * (len(prev_drugs) + len(antibiotics)) + 400
+        l = (17 + 8 + 8) * (len(prev_drugs) + len(antibiotics)) + 700
         prev_drugs.remove(first_drug)
 
         self.search_drug(first_drug, primary_search)
@@ -47,10 +47,14 @@ class SeleniumSearch:
         secondary_search = driver.find_element(by=By.ID, value="livesearch-interaction")
 
         for drug in prev_drugs:
+            # secondary_search = driver.find_element(by=By.ID, value="livesearch-interaction")
             self.search_drug(drug, secondary_search)
+            driver.switch_to.default_content()
             
         for drug in antibiotics:
+            # secondary_search = driver.find_element(by=By.ID, value="livesearch-interaction")
             self.search_drug(drug, secondary_search)
+            driver.switch_to.default_content()
 
         driver.execute_script("window.scrollTo(0," + str(l) + ")")
         time.sleep(1)
@@ -122,8 +126,9 @@ class SeleniumSearch:
     def search_drug(self, drug_name, search_elem):
         search_elem.clear()
         search_elem.send_keys(drug_name)
+        print(drug_name)
         search_elem.send_keys(Keys.RETURN)
-        time.sleep(0.5)
+        time.sleep(1)
 
 def sort_interactions(d: dict) -> dict:
     return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0],d[k][1],d[k][2]), reverse=False)}
