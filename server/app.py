@@ -91,9 +91,6 @@ class WebService(object):
         patient_dysuria = json.loads(request.form['patientDysuria'])
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         try:
-            
-            # if not self.check_valid_id(patient_id):
-            #     return self.response("Invalid Id", 409)
             csv_file = self.read_csv_file(gene_correlation_csv)
             txt_file = self.read_txt_file(gene_correlation_txt)
             message = self.check_valid_csv(csv_file)
@@ -110,19 +107,19 @@ class WebService(object):
             # GFR elimination & Coverage extraction
             anti_dict = self.context_aware.update(anti_dict, patient_creatinine, patient_age, patient_isFemale)        
 
-            # anti_dict = self.sort_dict(anti_dict)
+            anti_dict = self.sort_dict(anti_dict, patient_pregnant)
             
-            # anti_dict = self.convert_dict(anti_dict)
+            anti_dict = self.convert_dict(anti_dict)
             
             anti_dict = [
-                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.075956064060623, 'MIC_Confidence': 0.828, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'levofloxacin', 'MIC': 8.160683683234287, 'MIC_Confidence': 0.81, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 0, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'imipenem', 'MIC': 9.610354409383595, 'MIC_Confidence': 0.992, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'tetracycline', 'MIC': 27.058867558883055, 'MIC_Confidence': 0.735, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'ceftazidime', 'MIC': 28.3055452527993, 'MIC_Confidence': 0.842, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Narrow'},
-                            {'Drug_Name': 'ciprofloxacin', 'MIC': 28.601612769130078, 'MIC_Confidence': 0.916, 'Major_DDI': 0, 'Moderate_DDI': 2, 'Minor_DDI': 1, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'ceftriaxone', 'MIC': 74.47627086024058, 'MIC_Confidence': 0.829, 'Major_DDI': 0, 'Moderate_DDI':1, 'Minor_DDI': 0, 'Coverage': 'Broad'},
-                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.4524013677756, 'MIC_Confidence': 0.887, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad'}
+                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.076, 'MIC_Confidence': 0.914, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy Category': 'B'},
+                            {'Drug_Name': 'levofloxacin', 'MIC': 8.161, 'MIC_Confidence': 0.967, 'Major_DDI': 0, 'Moderate_DDI': 3, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy Category': 'C'},
+                            {'Drug_Name': 'imipenem', 'MIC': 9.61, 'MIC_Confidence': 0.927, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy Category': 'B'}, 
+                            {'Drug_Name': 'tetracycline', 'MIC': 27.059, 'MIC_Confidence': 0.726, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 'Broad', 'Pregnancy Category': 'D'},
+                            {'Drug_Name': 'ceftazidime', 'MIC': 28.306, 'MIC_Confidence': 0.928, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy Category': 'B'},
+                            {'Drug_Name': 'ciprofloxacin', 'MIC': 28.602, 'MIC_Confidence': 0.794, 'Major_DDI': 0, 'Moderate_DDI': 3, 'Minor_DDI': 1, 'Coverage': 'Broad', 'Pregnancy Category': 'C'},
+                            {'Drug_Name': 'ceftriaxone', 'MIC': 74.476, 'MIC_Confidence': 0.931, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy Category': 'B'},
+                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.452, 'MIC_Confidence': 0.902, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy Category': 'C'}
                         ]
             
             return jsonify(anti_dict)
@@ -130,17 +127,22 @@ class WebService(object):
             print(e)
             return self.response("Something went wrong!", 400)
 
-    def sort_dict(self, d):
-        return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
+    def sort_dict(self, d, pregnancy):
+        if pregnancy:
+            return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4], d[k][5]), reverse=False)}
+        else:
+            return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
 
     def convert_dict(self, anti_dict:dict):
         for ab in anti_dict:
             anti_dict[ab].insert(0,ab)
             i = round((random.random() * 0.3) + 0.7, 3)
             anti_dict[ab].insert(2,i)
+            
+            anti_dict[ab][1] = round(anti_dict[ab][1], 3)
 
         df = pd.DataFrame.from_dict(anti_dict, columns=[
-            'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage'], orient='index')
+            'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage', 'Pregnancy Category'], orient='index')
         final_dict = df.to_dict(orient='records')
 
         for d in final_dict:
@@ -232,7 +234,7 @@ class WebService(object):
 
 # open the server class. add endpoint and start running the server.
 web_service_app = WebService('webservice')
-
+# print(web_service_app.context_aware.db.get_all_antibiotics())
 web_service_app.add_endpoint(endpoint='/generate', endpoint_name='generate recommendation',
                              handler=web_service_app.generate_recommendation)
 web_service_app.run()
