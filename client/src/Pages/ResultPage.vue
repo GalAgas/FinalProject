@@ -23,7 +23,11 @@
         </b-table>
     </div>
     <div>
-      <h4><b>* Click On Drug Name For More Information &nbsp;
+      <h4><b>* Click On Drug Name For Explainability &nbsp;
+        <b-icon icon="file-earmark-code-fill" scale="2">
+      </b-icon></b></h4>
+      <br/>
+      <h4><b>** Click On index For More Information &nbsp;
         <b-icon icon="info-circle-fill" scale="2">
       </b-icon></b></h4>
     </div>
@@ -154,6 +158,10 @@ export default {
 </script>
 
 <style>
+.container{
+  zoom: 80%;
+}
+
 #confi{
   width: 100%;
   font-weight: bold;
