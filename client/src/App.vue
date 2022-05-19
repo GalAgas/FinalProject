@@ -19,6 +19,7 @@ export default {
     NavBar,
   },
 };
+
 </script>
 
 <style>
@@ -30,13 +31,15 @@ export default {
   color: #2c3e50;
   font-family: "Exo";
   font-weight: bold;
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 #app:before {
   content: '';
   display: block;
-  min-height: 100%;
-  min-width: 100%;
+  height: 140%;
+  width: 100%;
   position: absolute;
   background-repeat: no-repeat;
   background-size: cover;
@@ -48,5 +51,7 @@ export default {
 
 #innerDiv{
   margin-top:5%;
+  height: 100%;
+  width: 100%;
 }
 </style>

@@ -8,7 +8,9 @@
         <b-table striped hover :items="res" :fields="visibleFields" id="results"
          :dark="true" :filter="confidenceFilter" :filter-function="filterTable">
           <template #cell(index)="data">
+            <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">
             {{ data.index + 1 }}
+            </a>
           </template>
           <!-- <template #cell(Drug_Name)="data">
             <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">{{ data.item.Drug_Name }}</a>
@@ -41,7 +43,6 @@
         placeholder="Enter Number between 0 and 1">
       </b-form-input>
     </b-form-group>
-
   </div>
 </template>
 
@@ -51,6 +52,7 @@ export default {
   name: 'ResultsPage',
   data() {
     return {
+      show: false,
       popUp: '',
       res: null,
       pregnant: null,
@@ -59,12 +61,12 @@ export default {
       fields: [{ key: 'index', visable: true },
         { key: 'Drug_Name', visable: true },
         { key: 'MIC', visable: true },
-        { key: 'MIC_Confidence', visable: true },
-        { key: 'Major_DDI', visable: false },
-        { key: 'Moderate_DDI', visable: false },
-        { key: 'Minor_DDI', visable: false },
-        { key: 'Coverage', visable: false },
-        { key: 'Pregnancy_Category', visable: false }],
+        { key: 'MIC_Confidence', visable: true }],
+      // { key: 'Major_DDI', visable: false },
+      // { key: 'Moderate_DDI', visable: false },
+      // { key: 'Minor_DDI', visable: false },
+      // { key: 'Coverage', visable: false },
+      // { key: 'Pregnancy_Category', visable: false }],
     };
   },
   created() {
@@ -99,33 +101,40 @@ export default {
       Object.keys(this.res).forEach((idx) => {
         if (data === this.res[idx].Drug_Name) {
           Object.keys(keysToshow).forEach((field) => {
-            msg = `${msg}${field}: ${this.res[idx][field]}\n`;
+            const cleanField = field.replaceAll('_', ' ');
+            msg = `${msg}${cleanField}: ${this.res[idx][field]}\n`;
           });
           if (this.female && this.pregnant === 'pregnant') {
             msg += `Pregnancy Category: ${this.res[idx].Pregnancy_Category}`;
           }
         }
       });
-      const h = this.$createElement;
-      // const messageVNode = h('div', { class: ['foobar'] }, [
-      //   h('p', { class: ['text-center'] }, [
-      //     'click',
-      //     h('a', { href: [`https://www.drugs.com/search.php?searchterm=${data}`], target: '_blank' }, [
-      //       ' here',
-      //     ]),
-      //     ' to drugs.com',
-      //   ]),
-      const vnode = h('a', { href: [`https://www.drugs.com/search.php?searchterm=${data}`], target: '_blank' });
-      vnode.text = 'here';
-      // const a = this.$createElement('a');
+      // const container = document.getElementById('modal1');
+      // console.log(container);
+      // const t = document.createElement('b-modal');
+      // // console.log(u);
+      // // const t = document.getElementById('outer');
+      // t.model = this.show;
+      // const con = document.createElement('b-container');
+      // t.appendChild(con);
+      // const p = document.createElement('p');
+      // const a = document.createElement('a');
+      // p.innerText = msg;
+      // con.appendChild(p);
       // a.href = `https://www.drugs.com/search.php?searchterm=${data}`;
+      // a.text = 'click here';
       // a.target = '_blank';
-      // a.innerText = 'click me';
-      console.log(vnode);
-      // msg += a.innerText;
+      // con.appendChild(a);
+      // // document.getElementById('outer').appendChild(t);
+      // this.show = true;
+      // const p = this.$createElement('p');
+      // p.text = msg;
+      // const a = 'click me';
+      // const r = a.link(`https://www.drugs.com/search.php?searchterm=${data}`);
+      // console.log(p);
       this.$bvModal.msgBoxOk([msg], {
         id: 'pop',
-        title: `${data} information`,
+        title: [`${data} information`],
         size: 'md',
         buttonSize: 'sm',
         okVariant: 'info',
@@ -158,5 +167,6 @@ export default {
 }
 #pop {
   white-space: pre;
+  text-align: center;
 }
 </style>
