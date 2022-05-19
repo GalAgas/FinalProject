@@ -126,16 +126,18 @@
                   </b-form-group>
                 </b-dropdown-form>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item-button
-                  v-for="option in availableOptions"
-                  :key="option"
-                  @click="onDrugsOptionClick({ option, addTag })"
-                >
+                <b-form-group id="bformgropdrop">
+                  <b-dropdown-item-button
+                    v-for="option in availableOptions"
+                    :key="option"
+                    @click="onDrugsOptionClick({ option, addTag })"
+                  >
                   {{ option }}
-                </b-dropdown-item-button>
-                <b-dropdown-text v-if="availableOptions.length === 0">
-                  There are no tags available to select
-                </b-dropdown-text>
+                  </b-dropdown-item-button>
+                  <b-dropdown-text v-if="availableOptions.length === 0">
+                    There are no tags available to select
+                  </b-dropdown-text>
+                </b-form-group>
               </b-dropdown>
             </template>
           </b-form-tags>
@@ -171,6 +173,7 @@ import {
   required,
   numeric,
 } from 'vuelidate/lib/validators';
+import drugsList from '../assets/drugs';
 
 export default {
   name: 'RecInputPage',
@@ -191,7 +194,7 @@ export default {
           { text: 'Female', value: 'Female' },
         ],
         pregnancy: 'not pregnant',
-        drugsOptions: ['Abilify', 'Ativan', 'Advil', 'C', 'CB'],
+        drugsOptions: drugsList,
         drugsSearch: '',
         creatinine: '1.5',
         fever: false,
@@ -359,5 +362,8 @@ export default {
 #submitbtn{
   margin-left: 3%;
 }
-
+#bformgropdrop{
+  height: 200px;
+  overflow-y: auto;
+}
 </style>
