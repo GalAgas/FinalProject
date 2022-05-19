@@ -111,14 +111,14 @@ class WebService(object):
             # anti_dict = self.convert_dict(anti_dict)
             
             anti_dict = [
-                            {'Drug_Name': 'ampicillin_sulbactam', 'MIC': 8.076, 'MIC_Confidence': 0.914, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'B'},
+                            {'Drug_Name': 'ampicillin/sulbactam', 'MIC': 8.076, 'MIC_Confidence': 0.914, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'B'},
                             {'Drug_Name': 'levofloxacin', 'MIC': 8.161, 'MIC_Confidence': 0.967, 'Major_DDI': 0, 'Moderate_DDI': 3, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'C'},
                             {'Drug_Name': 'imipenem', 'MIC': 9.61, 'MIC_Confidence': 0.927, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'B'},
                             {'Drug_Name': 'tetracycline', 'MIC': 27.059, 'MIC_Confidence': 0.726, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 1, 'Coverage': 'Broad', 'Pregnancy_Category': 'D'},
                             {'Drug_Name': 'ceftazidime', 'MIC': 28.306, 'MIC_Confidence': 0.928, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy_Category': 'B'},
                             {'Drug_Name': 'ciprofloxacin', 'MIC': 28.602, 'MIC_Confidence': 0.794, 'Major_DDI': 0, 'Moderate_DDI': 3, 'Minor_DDI': 1, 'Coverage': 'Broad', 'Pregnancy_Category': 'C'},
                             {'Drug_Name': 'ceftriaxone', 'MIC': 74.476, 'MIC_Confidence': 0.931, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'B'},
-                            {'Drug_Name': 'trimethoprim_sulfamethoxazole', 'MIC': 353.452, 'MIC_Confidence': 0.902, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy_Category': 'C'}
+                            {'Drug_Name': 'trimethoprim/sulfamethoxazole', 'MIC': 353.452, 'MIC_Confidence': 0.902, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy_Category': 'C'}
                         ]
             
             return jsonify(anti_dict)
@@ -149,6 +149,8 @@ class WebService(object):
                 d['Coverage'] = 'Narrow'
             else:
                 d['Coverage'] = 'Broad'
+            if "_" in d['Drug_Name']:
+                d['Drug_Name'].replace('_', '/')
         return final_dict
 
     def check_valid_txt(self, gene_correlation_txt):

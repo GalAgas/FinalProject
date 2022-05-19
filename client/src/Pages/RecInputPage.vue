@@ -87,7 +87,7 @@
           Dysuria
         </b-form-checkbox>
         <div>
-        <b-form-group label="More Drugs of Patient" label-for="tags-with-dropdown">
+        <b-form-group label="Patient Routine Medications" label-for="tags-with-dropdown">
           <b-form-tags
             id="tags-with-dropdown"
             v-model="drugsValue">
