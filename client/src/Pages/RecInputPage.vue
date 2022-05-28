@@ -126,7 +126,7 @@
                   </b-form-group>
                 </b-dropdown-form>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-form-group id="bformgropdrop">
+                <b-form-group id="bformgroupdrop">
                   <b-dropdown-item-button
                     v-for="option in availableOptions"
                     :key="option"
@@ -362,7 +362,7 @@ export default {
 #submitbtn{
   margin-left: 3%;
 }
-#bformgropdrop{
+#bformgroupdrop{
   height: 200px;
   overflow-y: auto;
 }
