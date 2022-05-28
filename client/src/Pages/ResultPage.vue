@@ -8,32 +8,35 @@
         <b-table striped hover :items="res" :fields="visibleFields" id="results"
          :dark="true" :filter="confidenceFilter" :filter-function="filterTable">
           <template #cell(index)="data">
-            <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">
             {{ data.index + 1 }}
-            </a>
           </template>
-          <!-- <template #cell(Drug_Name)="data">
-            <a :href="`https://www.drugs.com/search.php?searchterm=${data.item.Drug_Name}`" target="_blank">{{ data.item.Drug_Name }}</a>
-          </template> -->
           <template #cell(Drug_Name)="data">
             <a id="linkToPopUp" @click="showPopUp(data.item.Drug_Name)">
             {{ data.item.Drug_Name }}
             </a>
           </template>
         </b-table>
+        <b-modal
+        ref='modalpopup'
+        footer-bg-variant= 'light'
+        header-bg-variant= 'dark'
+        header-text-variant= 'light'
+        body-bg-variant= 'light'
+        :title="popupTitle" okOnly centered
+        headerClass='p-2 border-bottom-0'
+        footerClass='p-2 border-top-0'
+        okVariant='success'
+        buttonSize='md'>
+          <p id='popupbody'>
+          {{ message }}<a :href="link" target="_blank">Click For More Information</a></p></b-modal>
     </div>
     <div>
       <h4><b>* Click On Drug Name For Explainability &nbsp;
         <b-icon icon="file-earmark-code-fill" scale="2">
       </b-icon></b></h4>
-      <br/>
-      <h4><b>** Click On index For More Information &nbsp;
-        <b-icon icon="info-circle-fill" scale="2">
-      </b-icon></b></h4>
     </div>
     <br/>
     <br/>
-
     <b-form-group id="confi" label="Confidence Level Filter: " label-for="confi"
       label-size="lg"
       label-cols-sm="4"
@@ -56,8 +59,9 @@ export default {
   name: 'ResultsPage',
   data() {
     return {
-      show: false,
-      popUp: '',
+      popupTitle: '',
+      link: '',
+      message: '',
       res: null,
       pregnant: null,
       female: '',
@@ -66,11 +70,6 @@ export default {
         { key: 'Drug_Name', visable: true },
         { key: 'MIC', visable: true },
         { key: 'MIC_Confidence', visable: true }],
-      // { key: 'Major_DDI', visable: false },
-      // { key: 'Moderate_DDI', visable: false },
-      // { key: 'Minor_DDI', visable: false },
-      // { key: 'Coverage', visable: false },
-      // { key: 'Pregnancy_Category', visable: false }],
     };
   },
   created() {
@@ -100,7 +99,6 @@ export default {
         Minor_DDI: 6,
         Coverage: 7,
       };
-      this.popUp = '';
       let msg = '';
       Object.keys(this.res).forEach((idx) => {
         if (data === this.res[idx].Drug_Name) {
@@ -113,45 +111,11 @@ export default {
           }
         }
       });
-      // const container = document.getElementById('modal1');
-      // console.log(container);
-      // const t = document.createElement('b-modal');
-      // // console.log(u);
-      // // const t = document.getElementById('outer');
-      // t.model = this.show;
-      // const con = document.createElement('b-container');
-      // t.appendChild(con);
-      // const p = document.createElement('p');
-      // const a = document.createElement('a');
-      // p.innerText = msg;
-      // con.appendChild(p);
-      // a.href = `https://www.drugs.com/search.php?searchterm=${data}`;
-      // a.text = 'click here';
-      // a.target = '_blank';
-      // con.appendChild(a);
-      // // document.getElementById('outer').appendChild(t);
-      // this.show = true;
-      // const p = this.$createElement('p');
-      // p.text = msg;
-      // const a = 'click me';
-      // const r = a.link(`https://www.drugs.com/search.php?searchterm=${data}`);
-      // console.log(p);
-      this.$bvModal.msgBoxOk([msg], {
-        id: 'pop',
-        title: [`${data} information`],
-        size: 'md',
-        buttonSize: 'sm',
-        okVariant: 'info',
-        headerClass: 'p-2 border-bottom-0',
-        footerClass: 'p-2 border-top-0',
-        centered: true,
-      })
-        .then((value) => {
-          this.popUp = value;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.message = msg;
+      this.link = `https://www.drugs.com/search.php?searchterm=${data}`;
+      this.popupTitle = `${data.charAt(0).toUpperCase()}${data.slice(1)} Infromation`;
+      const mymodal = this.$refs.modalpopup;
+      mymodal.show();
     },
   },
 };
@@ -173,8 +137,11 @@ export default {
 #linkToPopUp {
     cursor: pointer;
 }
-#pop {
+#popupbody {
   white-space: pre;
   text-align: center;
+}
+.modalclass {
+  background: red;
 }
 </style>
