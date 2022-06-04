@@ -7,8 +7,8 @@ from autoxgb.cli.predict import PredictAutoXGBCommand
 from gps_lib.parse_raw_utils import get_isolate_features, get_isolate_features_from_site
 
 # MODELS_DIR = '\server\models'
-MODELS_DIR = r'C:/Guy/University/Project/FinalProject/server/models'
-# MODELS_DIR = 'C:\Guy\University\Project\FinalProject\server\models'
+MODELS_DIR = r'C:/Users/user/Desktop/FinalProject/server/models'
+# MODELS_DIR = 'C:\Users\user\Desktop\FinalProject\server\models'
 SAMPLE_PATH_DIR = 'server\mic_files'
 
 '''
@@ -96,5 +96,5 @@ def model_predict(X, model, model_param):
         preds = pd.read_csv('{}/preds.csv'.format(data_dir)).iloc[0].iloc[1]
     else:
         print('Unkown saved model')
-        print('at path: {}'.format(model_dir))
+        # print('at path: {}'.format(model_dir))
     return np.power(preds, 2)
