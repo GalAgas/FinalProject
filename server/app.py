@@ -44,7 +44,7 @@ class WebService(object):
         self.context_aware.create_db()
 
     def run(self):
-        self.app.run(debug=True)
+        self.app.run(debug=True, host='132.73.84.40', port=443)
 
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         """
