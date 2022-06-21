@@ -1,6 +1,6 @@
 import pandas as pd
 from pandas.core.indexes.base import Index
-from flask import Flask, jsonify, request, json, abort
+from flask import Flask, jsonify, request, json, abort, send_from_directory
 from flask_cors import CORS
 from MICPredictor import MICPredictor
 from treatmentRanking import treatmentRanking
@@ -8,7 +8,8 @@ from contextAware import contextAware
 import re
 from io import BytesIO
 import random
-
+import http.server
+import ssl
 
 # configuration
 DEBUG = True
@@ -34,7 +35,14 @@ class WebService(object):
     """
 
     def __init__(self, name):
-        self.app = Flask(name)
+        # server_address = ('localhost', 443)
+        # # self.context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+        # # certfile = 'C:/Users/user/Desktop/FinalProject/server/fullchain.pem'
+        # # keyfile = 'C:/Users/user/Desktop/FinalProject/server/privkey.pem'
+        # # self.context.load_cert_chain(certfile, keyfile)
+        # self.httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
+        # self.httpd.socket = ssl.wrap_socket(self.httpd.socket, certfile='fullchain.pem', keyfile='privkey1.pem', ssl_version=ssl.PROTOCOL_TLSv1)
+        self.app = Flask(name, static_url_path='/' ,static_folder='dist')
         self.app.config.from_object(__name__)
         # enable CORS
         CORS(self.app, resources={r'/*': {'origins': '*'}})
@@ -44,8 +52,9 @@ class WebService(object):
         self.context_aware.create_db()
 
     def run(self):
-        self.app.run(debug=True, host='132.73.84.40', port=443)
-
+        self.app.run(debug=True, ssl_context=('fullchain.pem', 'privkey1.pem'), host='gps-ise.cs.bgu.ac.il', port=443)
+        # self.httpd.serve_forever()
+        # self.app.run(debug=True, port=443)
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         """
         Links between specific endpoint url to a given handler function
@@ -70,7 +79,9 @@ class WebService(object):
             mimetype='application/json'
         )
         return response
-
+    
+    def start(self):
+        return send_from_directory(self.app.static_folder, 'index.html')
     def generate_recommendation(self):
         """
         the function validates that input is valid and then generates a treatment recommendation table based on input.
@@ -238,4 +249,7 @@ web_service_app = WebService('webservice')
 # print(web_service_app.context_aware.db.get_all_antibiotics())
 web_service_app.add_endpoint(endpoint='/generate', endpoint_name='generate recommendation',
                              handler=web_service_app.generate_recommendation)
-web_service_app.run()
+web_service_app.add_endpoint(endpoint='/', endpoint_name='start web',
+                             handler=web_service_app.start)
+if __name__ == '__main__':
+    web_service_app.run()

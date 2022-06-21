@@ -296,7 +296,7 @@ export default {
       const config = {
         headers: { 'content-type': 'multipart/form-data' },
       };
-      const path = 'http://localhost:5000/generate';
+      const path = 'https://gps-ise.cs.bgu.ac.il/generate';
       axios.post(path, bodyFormData, config)
         .then((res) => {
           this.msg = res.data;
