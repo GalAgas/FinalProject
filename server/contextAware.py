@@ -31,7 +31,7 @@ class contextAware:
         # ranked_treatments = initial_ranking.to_dict(orient='records')
         self.db.open_connection()
         GFR = self.calculate_GFR(creatinine, age, isFemale)
-        # after MIC completed, we can change this function to select from db only the relevent antibiotics.
+        # after MIC completed, we can change this function to select from db only the relevant antibiotics.
         antibiotics = self.db.get_all_antibiotics()
         for ab in antibiotics:
             if ab[3] != -1 and ab[3] < GFR and ab[1] in anti_dict:

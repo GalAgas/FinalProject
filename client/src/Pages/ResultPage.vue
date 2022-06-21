@@ -107,7 +107,7 @@ export default {
             msg = `${msg}${cleanField}: ${this.res[idx][field]}\n`;
           });
           if (this.female && this.pregnant === 'pregnant') {
-            msg += `Pregnancy Category: ${this.res[idx].Pregnancy_Category}`;
+            msg += `Pregnancy Category: ${this.res[idx].Pregnancy_Category}\n`;
           }
         }
       });

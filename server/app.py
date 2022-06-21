@@ -55,6 +55,7 @@ class WebService(object):
         self.app.run(debug=True, ssl_context=('fullchain.pem', 'privkey1.pem'), host='gps-ise.cs.bgu.ac.il', port=443)
         # self.httpd.serve_forever()
         # self.app.run(debug=True, port=443)
+
     def add_endpoint(self, endpoint=None, endpoint_name=None, handler=None):
         """
         Links between specific endpoint url to a given handler function
@@ -82,6 +83,7 @@ class WebService(object):
     
     def start(self):
         return send_from_directory(self.app.static_folder, 'index.html')
+
     def generate_recommendation(self):
         """
         the function validates that input is valid and then generates a treatment recommendation table based on input.
@@ -102,7 +104,7 @@ class WebService(object):
         patient_drugs_in_use = request.form['patientDrugsInUse'].split(",")
         try:
             csv_file = self.read_csv_file(gene_correlation_csv)
-            txt_file = self.read_txt_file(gene_correlation_txt)
+            txt_file = self.read_txt_file(file=gene_correlation_txt)
             message = self.check_valid_csv(csv_file)
             if message != '':
                 return self.response('Error in csv file! \n' + message, 400)
@@ -131,7 +133,7 @@ class WebService(object):
             #                 {'Drug_Name': 'ceftriaxone', 'MIC': 74.476, 'MIC_Confidence': 0.931, 'Major_DDI': 0, 'Moderate_DDI': 1, 'Minor_DDI': 0, 'Coverage': 'Broad', 'Pregnancy_Category': 'B'},
             #                 {'Drug_Name': 'trimethoprim/sulfamethoxazole', 'MIC': 353.452, 'MIC_Confidence': 0.902, 'Major_DDI': 0, 'Moderate_DDI': 0, 'Minor_DDI': 0, 'Coverage': 'Narrow', 'Pregnancy_Category': 'C'}
             #             ]
-            #
+            
             return jsonify(anti_dict)
         except Exception as e:
             print(e)
@@ -139,20 +141,20 @@ class WebService(object):
 
     def sort_dict(self, d, pregnancy):
         if pregnancy:
-            return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4], d[k][5]), reverse=False)}
+            return {k:d[k] for k in sorted(d, key=lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4], d[k][5]), reverse=False)}
         else:
-            return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
+            return {k:d[k] for k in sorted(d, key=lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
 
-    def convert_dict(self, anti_dict:dict):
+    def convert_dict(self, anti_dict: dict):
         for ab in anti_dict:
-            anti_dict[ab].insert(0,ab)
+            anti_dict[ab].insert(0, ab)
             i = round((random.random() * 0.3) + 0.7, 3)
-            anti_dict[ab].insert(2,i)
+            anti_dict[ab].insert(2, i)
             
             anti_dict[ab][1] = round(anti_dict[ab][1], 3)
 
         df = pd.DataFrame.from_dict(anti_dict, columns=[
-            'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage', 'Pregnancy Category'], orient='index')
+            'Drug_Name', 'MIC', 'MIC_Confidence', 'Major_DDI','Moderate_DDI', 'Minor_DDI', 'Coverage', 'Pregnancy_Category'], orient='index')
         final_dict = df.to_dict(orient='records')
 
         for d in final_dict:
@@ -161,7 +163,7 @@ class WebService(object):
             else:
                 d['Coverage'] = 'Broad'
             if "_" in d['Drug_Name']:
-                d['Drug_Name'].replace('_', '/')
+                d['Drug_Name'] = d['Drug_Name'].replace('_', '/')
         return final_dict
 
     def check_valid_txt(self, gene_correlation_txt):
@@ -235,10 +237,17 @@ class WebService(object):
         gene_correlation_csv.columns = original_columns_names
         return message
 
-    def read_txt_file(self, file):
-        # return file.readlines()
-        f = pd.read_csv(BytesIO(file.read()), sep=" ", header=None)
-        return f
+    def read_txt_file(self, file=None, file_loc=None):
+        if file_loc is not None:
+            with open(file_loc) as f:
+                lines = f.readlines()
+                lines_2D = []
+                for l in lines:
+                    lines_2D.append(l.split(" "))
+            file_as_df = pd.DataFrame(lines_2D)
+        else:
+            file_as_df = pd.read_csv(BytesIO(file.read()), sep=" ", header=None)
+        return file_as_df
 
     def read_csv_file(self, file):
         return pd.read_csv(file, index_col=0)

@@ -38,7 +38,7 @@ export default {
 #app:before {
   content: '';
   display: block;
-  height: 140%;
+  height: 100%;
   width: 100%;
   position: absolute;
   background-repeat: no-repeat;
