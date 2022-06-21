@@ -6,7 +6,7 @@
     <br>
     <br>
     <br>
-    <b-button variant="primary" :to="{ name: 'RecInputPage'}" class="ReccBtn" id="btn">
+    <b-button variant="primary" v-on:click="handleStart" class="ReccBtn" id="btn">
     Start Recommendation Process </b-button>
   </div>
 </template>
@@ -21,6 +21,9 @@ export default {
     };
   },
   methods: {
+    handleStart() {
+      this.$router.push({ name: 'RecInputPage' });
+    },
   },
 };
 </script>
