@@ -3,8 +3,8 @@
     <h1><B>About Page</B></h1>
     <p id="parProject">
       A Rules-Based recommendation system for antibiotic treatment.<br>
-      The system uses elimination and sorting factors like:<br>
-      AMR, kidney Function, DDI & Range coverage.<br>
+      The system uses elimination and ranking factors like:<br>
+      AMR, kidney Function, DDI, Range coverage & pregnancy category.<br>
       Includes End to end automated pipeline relying on patient and bacterial properties.<br>
       Single Page web application with client-server architecture.<br>
       Based on REST API - using Swagger, Server Side – Flask framework, Client Side – Vue.js.<br>
