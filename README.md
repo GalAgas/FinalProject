@@ -1,10 +1,12 @@
 # FinalProject
 
-## Recommendation System for Antibiotic Treatment - Initial Version
+## Rule Based Recommendation System for Antibiotic Treatment
+
+Main decision factors - filter and ranking:
+MIC level, Drug-Drug interactions, kidney function, range coverage and pregnancy category
 
 ## Instructors
-Mr. Amit Weiss - instructor<br />
-Prof. Jacob Moran-Gilad - instructor & client
+Prof. Jacob Moran-Gilad, Dr. Daniel Grupel & Mr. Amit Weiss
 
 ## Project Members
 Guy Zaidman, Gal Agasi, Tomer Kelner & Tomer Varon
@@ -13,7 +15,7 @@ Guy Zaidman, Gal Agasi, Tomer Kelner & Tomer Varon
 ## General Info
 :ok_hand: Web based application with client-server architecture<br />
 :ok_hand: REST API - using Swagger, Server Side – Flask framework, Client Side – Vue.js<br />
-:ok_hand: End to end automated DEMO pipeline development (algorithmoc modules still in research)<br />
+:ok_hand: End to end automated decision pipeline development <br />
 :ok_hand: Single Page App with easy to use GUI<br />
 
 ## Link to API
@@ -22,11 +24,13 @@ Enjoy :heart:
 
 ## Functionality
 :ok_hand: Main Page with Nav Bar contains links to other pages and button to start the recommendation process.<br />
-:ok_hand: Inputs Page - enables the user to enter patient ID and select Gene correlation files -  CSV & TXT.<br />
+:ok_hand: Bacteria Inputs Page - enables the user to upload analyzed genetic sequencing data files -  CSV & TXT.<br />
+:ok_hand: Patient Inputs Page - enables the user to enter personal medical data - age, sex, creatnin level, routine drugs.<br />
 :ok_hand: Validation checks for inputs.<br />
-:ok_hand: Results Page - displays sorted optional treatments, best option at the top.<br />
+:ok_hand: Results Page - displays ranked optional treatments, best option at the top.<br />
 :ok_hand: Filter results according to user choise of confidence level.<br />
-:ok_hand: QA - Backend autameted unit testing using Pytest.<br />
+:ok_hand: Explainability feature - disclose system decision considerations.<br />
+:ok_hand: More information feature - external routing to dtugs.com.<br />
 :ok_hand: About Page.<br />
 
 ## Link to Monday tasks management
