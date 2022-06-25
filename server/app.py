@@ -42,7 +42,7 @@ class WebService(object):
         # # self.context.load_cert_chain(certfile, keyfile)
         # self.httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
         # self.httpd.socket = ssl.wrap_socket(self.httpd.socket, certfile='fullchain.pem', keyfile='privkey1.pem', ssl_version=ssl.PROTOCOL_TLSv1)
-        self.app = Flask(name, static_url_path='/' ,static_folder='dist')
+        self.app = Flask(name, static_url_path='/', static_folder='dist')
         self.app.config.from_object(__name__)
         # enable CORS
         CORS(self.app, resources={r'/*': {'origins': '*'}})
