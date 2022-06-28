@@ -22,6 +22,7 @@ export default {
   },
   methods: {
     handleStart() {
+      // Go to RecInputPage
       this.$router.push({ name: 'RecInputPage' });
     },
   },
