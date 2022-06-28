@@ -73,17 +73,20 @@ export default {
     };
   },
   created() {
+    // set the recommandation table
     this.res = this.$route.params.res;
     this.pregnant = this.$route.params.pregnant;
     this.female = this.$route.params.female === 'Female';
   },
   computed: {
     visibleFields() {
+      // set the fields to show the user
       return this.fields.filter((filed) => filed.visable);
     },
   },
   methods: {
     filterTable(row, filter) {
+      // set minimum confidence to show the user
       if (filter === '') {
         return true;
       }
@@ -93,6 +96,7 @@ export default {
       return true;
     },
     showPopUp(data) {
+      // present the explainability to the user according to drug name(data).
       const keysToshow = {
         Major_DDI: 4,
         Moderate_DDI: 5,
@@ -100,6 +104,7 @@ export default {
         Coverage: 7,
       };
       let msg = '';
+      // create the message to show in pop up window
       Object.keys(this.res).forEach((idx) => {
         if (data === this.res[idx].Drug_Name) {
           Object.keys(keysToshow).forEach((field) => {

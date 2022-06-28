@@ -214,18 +214,22 @@ export default {
   },
   computed: {
     validateCSV() {
+      // return true if the file exists and the type is csv, else return false
       return this.csvFile && this.csvFile.type.endsWith('csv');
     },
     validateTXT() {
+      // return true if the file exists and the type is txt, else return false
       return this.txtFile && this.txtFile.type.endsWith('plain');
     },
     nextButtonDisabled() {
+      // if true, then next button will not be clickable
       if (this.csvFile == null || this.txtFile == null || !this.validateTXT || !this.validateCSV) {
         return true;
       }
       return false;
     },
     submitButtonDisabled() {
+      // if true, then submit button will not be clickable
       return this.Inputs.genderSelected === '' || this.Inputs.age === '';
     },
     criteria() {
@@ -243,6 +247,7 @@ export default {
       return options;
     },
     searchDesc() {
+      // print if the results of searching are empty
       if (this.criteria && this.availableOptions.length === 0) {
         return 'There are no tags matching your search criteria';
       }
@@ -251,6 +256,7 @@ export default {
   },
   watch: {
     txtFile(newval) {
+      // set the name of the file in txt input if exist, else set default.
       if (this.txtFile) {
         this.txtFileName = newval.name;
       } else {
@@ -258,6 +264,7 @@ export default {
       }
     },
     csvFile(newval) {
+      // set the name of the file in csv input if exist, else set default.
       if (this.csvFile) {
         this.csvFileName = newval.name;
       } else {
@@ -267,22 +274,26 @@ export default {
   },
   methods: {
     validateState(param) {
+      // validation for bacteria's inputs, green to valid and red to invalid
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
     validatePatientState(param) {
+      // validation for patient's inputs, green to valid and red to invalid
       const { $dirty, $error } = this.$v.Inputs[param];
       return $dirty ? !$error : null;
     },
     handleNext() {
+      // change form after click next
       this.step1 = false;
     },
     handleBack() {
+      // change form after click back
       this.step1 = true;
     },
     handleSubmit() {
+      // send the required data to server side.
       const bodyFormData = new FormData();
-      // bodyFormData.append('id', this.form.PatientID);
       bodyFormData.append('gene_correlation_csv', this.csvFile);
       bodyFormData.append('gene_correlation_txt', this.txtFile);
       bodyFormData.append('patientAge', this.Inputs.age);
@@ -296,9 +307,10 @@ export default {
       const config = {
         headers: { 'content-type': 'multipart/form-data' },
       };
-      const path = 'https://gps-ise.cs.bgu.ac.il/generate';
-      axios.post(path, bodyFormData, config)
+      const path = 'https://gps-ise.cs.bgu.ac.il/generate'; // the route in server side to handle the request
+      axios.post(path, bodyFormData, config) // promise, wait to answer from server side
         .then((res) => {
+          // push to result page with the data from server side
           this.msg = res.data;
           this.$router.push({ name: 'ResultPage', params: { res: res.data, pregnant: this.Inputs.pregnancy, female: this.Inputs.genderSelected } });
         })
@@ -309,6 +321,7 @@ export default {
         });
     },
     showPopUp(data) {
+      // raise informative Pop Up window about error from server.
       this.popUp = '';
       this.$bvModal.msgBoxOk(data, {
         title: 'Error',
@@ -327,6 +340,7 @@ export default {
         });
     },
     onDrugsOptionClick({ option, addTag }) {
+      // after click on drug name in search drugs, tag will be added
       addTag(option);
       this.Inputs.drugsSearch = '';
     },

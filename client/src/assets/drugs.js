@@ -1,3 +1,4 @@
+// common drugs that patients takes routinely
 export default [
   'Acetaminophen',
   'Adderall',
