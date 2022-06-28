@@ -1,5 +1,4 @@
 from collections import defaultdict
-# from ddi import SeleniumSearch
 import pandas as pd
 
 
@@ -8,7 +7,6 @@ class treatmentRanking:
 
     def __init__(self):
         pass
-        # self.selsearch = SeleniumSearch()
 
     def update(self, anti_dict, drugs_in_use, db):
         """

@@ -35,13 +35,6 @@ class WebService(object):
     """
 
     def __init__(self, name):
-        # server_address = ('localhost', 443)
-        # # self.context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-        # # certfile = 'C:/Users/user/Desktop/FinalProject/server/fullchain.pem'
-        # # keyfile = 'C:/Users/user/Desktop/FinalProject/server/privkey.pem'
-        # # self.context.load_cert_chain(certfile, keyfile)
-        # self.httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
-        # self.httpd.socket = ssl.wrap_socket(self.httpd.socket, certfile='fullchain.pem', keyfile='privkey1.pem', ssl_version=ssl.PROTOCOL_TLSv1)
         self.app = Flask(name, static_url_path='/', static_folder='dist')
         self.app.config.from_object(__name__)
         # enable CORS
@@ -52,6 +45,9 @@ class WebService(object):
         self.context_aware.create_db()
 
     def run(self):
+        """
+        Wraps the run method of app, using ssl keys to open a secure https connection
+        """
         self.app.run(debug=True, ssl_context=('fullchain.pem', 'privkey1.pem'), host='gps-ise.cs.bgu.ac.il', port=443)
         # self.httpd.serve_forever()
         # self.app.run(debug=True, port=443)
@@ -146,6 +142,14 @@ class WebService(object):
             return {k:d[k] for k in sorted(d, key=lambda k:(d[k][0], d[k][1], d[k][2], d[k][3], d[k][4]), reverse=False)}
 
     def convert_dict(self, anti_dict: dict):
+        """
+        converts the antibiotics dictionary to the fornat specified in the API
+        Args:
+            anti_dict (dict): the antibiotics dictionary
+
+        Returns:
+            dict: dictionary in the correct API format
+        """
         for ab in anti_dict:
             anti_dict[ab].insert(0, ab)
             i = round((random.random() * 0.3) + 0.7, 3)
@@ -238,6 +242,9 @@ class WebService(object):
         return message
 
     def read_txt_file(self, file=None, file_loc=None):
+        """
+        read the input text file and return it as a pandas DataFrame
+        """
         if file_loc is not None:
             with open(file_loc) as f:
                 lines = f.readlines()
@@ -250,6 +257,9 @@ class WebService(object):
         return file_as_df
 
     def read_csv_file(self, file):
+        """
+        read and return the input csv file as a pandas DataFrame
+        """
         return pd.read_csv(file, index_col=0)
 
 
