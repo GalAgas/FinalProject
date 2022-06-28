@@ -2,7 +2,6 @@ from typing import List
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.chrome.options import Options
 import time
 from collections import OrderedDict
 
@@ -11,6 +10,9 @@ PATH_TO_WEBSITE = r'https://www.drugs.com'
 
 
 class SeleniumSearch:
+    """
+    Wrapper class for extracting Drug-Drug Interactions between antibiotics and patient drugs
+    """
     def __init__(self):
         self.webdriver = PATH_TO_WEBDRIVER
         self.website = PATH_TO_WEBSITE
@@ -19,9 +21,18 @@ class SeleniumSearch:
         
         self.options = webdriver.ChromeOptions()
         self.options.add_argument('--disable-extensions')
-        # self.options.add_argument('--headless')
 
     def search_drugs(self, antibiotics:dict, prev_drugs:List)->dict:
+        """Main search function, web scrapes www.drugs.com for interactions between to collections of grugs
+
+        Args:
+            antibiotics (dict): possible antibiotics
+            prev_drugs (List): durgs taken by the patient
+
+        Returns:
+            dict: dictinary of lists, each key is a antibiotic<->drug combination,
+            each value is a list which each entery represents the number of major, moderate and minor interacions
+        """
         driver = webdriver.Chrome(self.webdriver, options=self.options)
         driver.maximize_window()
 
@@ -101,10 +112,14 @@ class SeleniumSearch:
         return interactions
          
     def register(self, driver):
+        """
+        registers to the drugs.com site for multi-input search
+        Args:
+            driver (WebDriver): the web driver in use currently
+        """
         
         NEXT_BUTTON_XPATH = '//*[@id="header"]/div/div/div/nav[2]/a[2]'
         sign_in_button = driver.find_element(By.XPATH, value=NEXT_BUTTON_XPATH)
-        # print(sign_in_button)
         sign_in_button.click()
         
         NEXT_BUTTON_XPATH = '//*[@id="content"]/div[2]/form/div[1]/label/input'
@@ -124,6 +139,9 @@ class SeleniumSearch:
         time.sleep(2)
 
     def search_drug(self, drug_name, search_elem):
+        """
+        enters each drug to the system
+        """
         search_elem.clear()
         search_elem.send_keys(drug_name)
         print(drug_name)
@@ -133,33 +151,4 @@ class SeleniumSearch:
 def sort_interactions(d: dict) -> dict:
     return {k:d[k] for k in sorted(d, key= lambda k:(d[k][0],d[k][1],d[k][2]), reverse=False)}
 
-if __name__ == '__main__':
-    prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
-    # prev = ['Abilify']
-    anti = ['gentamicin', 'levofloxacin']
-    # anti = ['gentamicin']
-    # ss = SeleniumSearch()
-    # d = ss.search_drugs(anti, prev)
-    d = {'gentamicin': [1, 2, 0], 'levofloxacin': [0, 2, 0], 'x': [0,0,0]}
-    print(d)
-    d2 = sort_interactions(d)
-    print(d2)
 
-# no interactions drugs - cefazolin, ampicillin, cefoxitin
-# no interactions drugs - Abilify, Ativan, Advil
-
-
-# {
-#     'z':[1,0,0],
-#     'y':[0,1,0],
-#     'x':[0,0,1],
-# }
-
-# {
-#     'a':[0,0,0],
-#     'x':[0,0,1],
-#     'q':[0,0,2],
-#     'y':[0,1,0],
-#     'w':[0,2,0],
-#     'z':[1,0,0],
-# }
