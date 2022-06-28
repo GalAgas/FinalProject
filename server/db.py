@@ -22,6 +22,9 @@ class Database:
         self.conn.commit()
 
     def open_connection(self):
+        """
+        connect to database
+        """
         current_path = Path(__file__).parent.absolute()
         self.conn = sqlite3.connect(str(current_path)+'\\database.db', check_same_thread=False)
 
@@ -46,16 +49,29 @@ class Database:
         return self.cur.fetchall()
 
     def get_antibiotic_info(self, antibiotic_name):
+        """
+        get the record from database of specific antibiotic
+        :param antibiotic_name: string
+        :return: list
+        """
         sql_query ='''SELECT * FROM Antibiotics WHERE Name=?'''
         info = self.select_from_db(sql_query, antibiotic_name)
         return info
 
     def get_all_antibiotics(self):
+        """
+        get the records from database of all antibiotics
+        :return: list
+        """
         sql_query = '''SELECT * FROM Antibiotics'''
         res = self.select_from_db(sql_query)
         return res
     
     def get_all_DDI(self):
+        """
+        get the records from database of all DDI
+        :return: list
+        """
         sql_query = '''SELECT * FROM DDI'''
         res = self.select_from_db(sql_query)
         return res
@@ -70,6 +86,9 @@ class Database:
         self.cur.execute(sql_query, params)
 
     def create_table_func(self):
+        """
+        create 2 tables, antibiotics and DDI.
+        """
         anti_query = '''CREATE TABLE Antibiotics(
             ID INTEGER PRIMARY KEY,
             Name VARCHAR(100) Unique Not Null,
@@ -93,26 +112,21 @@ class Database:
         self.commit()
         
     def build_db(self):
+        """
+        main function of class.
+        create the database and insert all data into.
+        """
         self.create_table_func()
         antibiotics = {
             "ampicillin_sulbactam": ['Broad', -1, 'B'],
             "ceftazidime": ['Narrow', -1, 'B'],
             "ceftriaxone": ['Broad', -1, 'B'],
             "ciprofloxacin": ['Broad', -1, 'C'],
-            # check pregnancy category
             'imipenem': ['Broad', -1, 'B'],
-            
             "gentamicin": ['Narrow', 30, 'D'],
-            
-            # check pregnancy category
             "levofloxacin": ['Broad', -1, 'C'],
-            
             "tetracycline": ['Broad', -1, 'D'],
-            
-            # check pregnancy category
             "tobramycin": ['Narrow', 30, 'D'],
-            
-            # check pregnancy category
             "trimethoprim_sulfamethoxazole": ['Narrow', -1, 'C']
         }
         sql_query = '''INSERT INTO Antibiotics(Name,Coverage,CrclThreshold,pregnancyCategory)
@@ -144,8 +158,6 @@ class Database:
         p2 = set(open("server\interactions drugs texts\interacted.txt","r").read().splitlines())
         p3 = set(open("server\interactions drugs texts\common_drugs.txt","r").read().splitlines())
         prev = list(p1.union(p2).union(p3))
-        
-        # prev = ['Abilify', 'Ativan', 'Advil', 'Lasix', 'Aspirin']
 
         sel = SeleniumSearch()
         interactions = sel.search_drugs(antibiotics=antis, prev_drugs=prev)
